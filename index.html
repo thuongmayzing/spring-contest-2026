@@ -14,7 +14,6 @@ body {
   background-color: #f7f8fc;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
   gap: 20px;
   flex-wrap: wrap;
   padding: 20px;
@@ -29,7 +28,6 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* LEADERBOARD */
 .leaderboard {
   width: 260px;
   background: white;
@@ -50,22 +48,18 @@ body {
   font-size: 14px;
 }
 
-.leaderboard-item:last-child {
-  border-bottom: none;
-}
-
 .me {
   font-weight: 700;
   color: #1e2447;
 }
 
-/* INPUT */
 .email-box {
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 100vh;
   gap: 12px;
+  justify-content: center;
 }
 
 .email-box input {
@@ -85,7 +79,6 @@ body {
   cursor: pointer;
 }
 
-/* HEADER */
 .header {
   background: #1e2447;
   color: white;
@@ -93,30 +86,11 @@ body {
   padding: 30px 20px 18px;
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 28px;
-}
-
-.header p {
-  margin: 6px 0 10px;
-  font-size: 14px;
-}
-
-.header hr {
-  width: 260px;
-  max-width: 70%;
-  border: none;
-  border-top: 1px solid rgba(255,255,255,0.25);
-  margin: 6px auto;
-}
-
 .level {
   font-size: 24px;
   font-weight: 700;
 }
 
-/* CONTENT */
 .content {
   text-align: center;
   padding: 30px 20px;
@@ -159,22 +133,13 @@ body {
   height: 100%;
   background: linear-gradient(90deg, #1e2447, #2f3e70);
   width: 0%;
-  color: #fff;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   padding-right: 10px;
   border-radius: 20px;
   transition: width 0.6s ease;
-}
-
-.footer-info {
-  display: flex;
-  justify-content: space-between;
-  width: 90%;
-  margin: 8px auto;
-  font-size: 13px;
-  color: gray;
 }
 
 .footer {
@@ -185,11 +150,8 @@ body {
 
 #widget { display: none; }
 
-/* responsive */
 @media (max-width: 768px) {
-  .leaderboard {
-    width: 100%;
-  }
+  .leaderboard { width: 100%; }
 }
 </style>
 </head>
@@ -199,8 +161,8 @@ body {
 <div class="container">
 
 <div class="email-box" id="email-box">
-  <input type="text" placeholder="Enter your userID" id="userIdInput">
-  <button onclick="loadWidget()">View my widget</button>
+  <input type="text" id="userIdInput" placeholder="Enter your userID">
+  <button onclick="loadWidget()">View</button>
 </div>
 
 <div id="widget">
@@ -208,7 +170,6 @@ body {
   <div class="header">
     <h1>Spring Contest</h1>
     <p>24 Mar to 24 Jun (23:59 GMT)</p>
-    <hr>
     <div class="level">YOU'RE ON LEVEL 0!</div>
   </div>
 
@@ -216,7 +177,7 @@ body {
 
     <div class="circle">
       <div>Unlock Next Level</div>
-      <div class="units">Loading...</div>
+      <div class="units">...</div>
       <div class="reward">...</div>
     </div>
 
@@ -226,11 +187,6 @@ body {
       <div class="progress-bar" id="progress-bar">0%</div>
     </div>
 
-    <div class="footer-info">
-      <div id="progress-text">Loading...</div>
-      <div id="time-left">⏰ Loading...</div>
-    </div>
-
   </div>
 
   <div class="footer">
@@ -238,22 +194,22 @@ body {
   </div>
 
 </div>
+
 </div>
 
-<!-- LEADERBOARD -->
 <div class="leaderboard">
-  <h3>🏆 Top Sellers</h3>
+  <h3>🏆 Top 3</h3>
   <div id="leaderboard-list">Loading...</div>
 </div>
 
 <script>
-const apiUrl = "YOUR_APPS_SCRIPT_URL";
 
-// mask email
+const apiUrl = "https://script.google.com/macros/s/AKfycbzmSrRs4gAKY53J8Ug9UJOd5H-NWWP9KilegorwCmhFlAdykf6DmIALCkhKMV92V_Ov5A/exec";
+
 function maskEmail(email) {
   if (!email) return "";
-  const [name, domain] = email.split("@");
-  return name.slice(0,2) + "***@" + domain;
+  const [n, d] = email.split("@");
+  return n.slice(0,2) + "***@" + d;
 }
 
 async function loadWidget() {
@@ -263,40 +219,26 @@ async function loadWidget() {
   document.getElementById("email-box").style.display = "none";
   document.getElementById("widget").style.display = "block";
 
-  const res = await fetch(apiUrl + "?id=" + userId);
-  const data = await res.json();
+  try {
+    const res = await fetch(apiUrl + "?id=" + encodeURIComponent(userId));
+    const data = await res.json();
 
-  renderData(data);
+    if (data.error) return alert(data.error);
+
+    render(data);
+
+  } catch (e) {
+    alert("Error loading");
+    console.log(e);
+  }
 }
 
-function renderData(data) {
+function render(data) {
 
-  document.getElementById("user-email").textContent = data.email;
-
-  const levels = [
-    { points: 1000, reward: "$200" },
-    { points: 2000, reward: "$500" },
-    { points: 5000, reward: "$1,500" },
-    { points: 10000, reward: "$3,500" },
-    { points: 25000, reward: "$10,000" },
-    { points: 50000, reward: "$25,000" },
-    { points: 150000, reward: "$100,000" }
-  ];
-
-  const points = data.points;
-
-  let currentLevel = 0;
-  for (let i = 0; i < levels.length; i++) {
-    if (points >= levels[i].points) currentLevel = i + 1;
-  }
+  document.getElementById("user-email").textContent = maskEmail(data.email);
 
   document.querySelector(".level").textContent =
-    `YOU'RE ON LEVEL ${currentLevel}!`;
-
-  const nextLevel = levels.find(l => l.points > points) || levels[levels.length - 1];
-
-  document.querySelector(".units").textContent = nextLevel.points + " Points";
-  document.querySelector(".reward").textContent = nextLevel.reward;
+    "YOU'RE ON LEVEL " + data.rank;
 
   document.querySelector(".stats").innerHTML = `
     <div>Units: ${data.units}</div>
@@ -304,36 +246,25 @@ function renderData(data) {
     <div>Rank: ${data.rank}</div>
   `;
 
-  // leaderboard
-  if (data.leaderboard) {
-    document.getElementById("leaderboard-list").innerHTML =
-      data.leaderboard.map(u => `
-        <div class="leaderboard-item ${u.userId === data.userId ? 'me' : ''}">
-          <span>#${u.rank} ${maskEmail(u.email)}</span>
-          <span>${u.points}</span>
-        </div>
-      `).join("");
-  }
+  renderLeaderboard(data);
 }
 
-// timer
-function updateTimer() {
-  const end = new Date("2026-06-24T23:59:59Z");
-  const now = new Date();
-  const diff = end - now;
+function renderLeaderboard(data) {
 
-  if (diff <= 0) return document.getElementById("time-left").textContent = "Ended";
+  if (!data.leaderboard) return;
 
-  const d = Math.floor(diff / (1000*60*60*24));
-  const h = Math.floor((diff / (1000*60*60)) % 24);
-  const m = Math.floor((diff / (1000*60)) % 60);
+  const top3 = data.leaderboard.slice(0,3);
 
-  document.getElementById("time-left").textContent =
-    `⏰ ${d}d ${h}h ${m}m`;
+  let html = top3.map(u => `
+    <div class="leaderboard-item ${u.userId === data.userId ? 'me' : ''}">
+      <span>#${u.rank} ${u.userId === data.userId ? "YOU" : maskEmail(u.email)}</span>
+      <span>${u.points}</span>
+    </div>
+  `).join("");
+
+  document.getElementById("leaderboard-list").innerHTML = html;
 }
 
-setInterval(updateTimer, 1000);
-updateTimer();
 </script>
 
 </body>
