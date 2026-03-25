@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Christmas Contest 2025</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Montserrat', sans-serif;
-      margin: 0;
-      background-color: #f7f8fc;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Christmas Contest 2025</title>
 
-```
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  background-color: #f7f8fc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
 .container {
   max-width: 500px;
   width: 90%;
@@ -42,7 +42,6 @@
   border-radius: 8px;
   border: 1px solid #ccc;
   width: 80%;
-  font-family: 'Montserrat', sans-serif;
   font-size: 16px;
 }
 
@@ -54,8 +53,6 @@
   padding: 10px 20px;
   font-weight: 600;
   cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
 }
 
 .header {
@@ -65,30 +62,7 @@
   padding: 40px 20px;
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 26px;
-  font-weight: 700;
-}
-
-.header p {
-  margin: 5px 0 10px;
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.header hr {
-  width: 50%;
-  margin: 12px auto;
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-.header .level {
-  font-size: 26px;
-  font-weight: 700;
-  margin-top: 10px;
-}
+.header h1 { margin: 0; }
 
 .content {
   text-align: center;
@@ -106,44 +80,18 @@
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  color: #1e2447;
-}
-
-.circle .unlock {
-  font-size: 14px;
-  margin-bottom: 4px;
-  font-weight: 500;
-}
-
-.circle .units {
-  font-size: 28px;
-  font-weight: 700;
-}
-
-.circle .reward {
-  font-size: 18px;
-  margin-top: 4px;
-  font-weight: 600;
 }
 
 .stats {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   margin: 10px 0 20px;
-  font-size: 15px;
   font-weight: 600;
-  color: #1e2447;
-}
-.stats div {
-  flex: 1;
-  text-align: center;
 }
 
 .progress-container {
-  position: relative;
   width: 90%;
-  margin: 0 auto 10px;
+  margin: 0 auto;
   background: #e0e0e0;
   border-radius: 20px;
   height: 26px;
@@ -153,12 +101,8 @@
 .progress-bar {
   height: 100%;
   background: linear-gradient(90deg, #1e2447, #2f3e70);
-  border-radius: 20px;
   width: 0%;
-  position: relative;
   color: #fff;
-  font-weight: 700;
-  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -170,8 +114,7 @@
   display: flex;
   justify-content: space-between;
   width: 90%;
-  margin: 6px auto 16px;
-  font-size: 14px;
+  margin: 6px auto;
   color: gray;
 }
 
@@ -182,42 +125,35 @@
   color: gray;
 }
 
-#widget {
-  display: none;
-}
-```
-
-  </style>
+#widget { display: none; }
+</style>
 </head>
-<body>
-  <div class="container">
 
-```
+<body>
+<div class="container">
+
 <div class="email-box" id="email-box">
-  <input type="email" placeholder="Enter your email (example@domain.com)" id="emailInput">
+  <input type="text" placeholder="Enter your userID" id="userIdInput">
   <button onclick="loadWidget()">View my widget</button>
 </div>
 
 <div id="widget">
+
   <div class="header">
     <h1>Christmas Contest</h1>
-    <p>20 Sep to 31 Dec (23:59 GMT)</p>
-    <hr>
+    <p>20 Sep to 31 Dec</p>
     <div class="level">YOU'RE ON LEVEL 0!</div>
   </div>
 
   <div class="content">
+
     <div class="circle">
-      <div class="unlock">Unlock Next Level</div>
+      <div>Unlock Next Level</div>
       <div class="units">250 Points</div>
       <div class="reward">$50</div>
     </div>
 
-    <div class="stats">
-      <div>Units: 0</div>
-      <div>Points: 0</div>
-      <div>Rank: -</div>
-    </div>
+    <div class="stats"></div>
 
     <div class="progress-container">
       <div class="progress-bar" id="progress-bar">0%</div>
@@ -227,37 +163,44 @@
       <div id="progress-text">0 / 250 Points</div>
       <div id="time-left">⏰ Loading...</div>
     </div>
+
   </div>
 
   <div class="footer">
-    Email: <span id="user-email">example@domain.com</span>
+    UserID: <span id="user-id"></span>
   </div>
-</div>
-```
 
-  </div>
+</div>
+</div>
 
 <script>
 const apiUrl = "https://script.google.com/macros/s/AKfycbwQnBwgravJEERSGbZk1-YajdXWotR6xB58yV3UgEB6Bedeftp2WEeF39Q2uicsCfc/exec";
 
 async function loadWidget() {
-  const email = document.getElementById("emailInput").value.trim().toLowerCase();
-  document.getElementById("user-email").textContent = email;
+  const userId = document.getElementById("userIdInput").value.trim();
+
+  if (!userId) {
+    alert("Please enter userID");
+    return;
+  }
+
+  document.getElementById("user-id").textContent = userId;
   document.getElementById("email-box").style.display = "none";
   document.getElementById("widget").style.display = "block";
 
   try {
-    const response = await fetch(apiUrl + "?id=" + encodeURIComponent(email));
-    const data = await response.json();
+    const res = await fetch(apiUrl + "?id=" + encodeURIComponent(userId));
+    const data = await res.json();
 
     if (data.error) {
-      alert("Email not found!");
+      alert("UserID not found!");
       location.reload();
       return;
     }
 
     const units = parseInt(data.units || 0);
     const points = parseInt(data.points || 0);
+    const rank = parseInt(data.rank || 0);
 
     const levels = [
       { points: 250, reward: "$50" },
@@ -277,13 +220,13 @@ async function loadWidget() {
       if (points >= levels[i].points) currentLevel = i + 1;
     }
 
-    document.querySelector(".level").textContent = `YOU'RE ON LEVEL ${currentLevel}!`;
+    document.querySelector(".level").textContent =
+      `YOU'RE ON LEVEL ${currentLevel}!`;
 
     const nextLevel = levels.find(l => l.points > points) || levels[levels.length - 1];
-    document.querySelector(".circle .units").textContent = nextLevel.points + " Points";
-    document.querySelector(".circle .reward").textContent = nextLevel.reward;
 
-    const rank = data.rank || 0;
+    document.querySelector(".units").textContent = nextLevel.points + " Points";
+    document.querySelector(".reward").textContent = nextLevel.reward;
 
     let rankGroup = "";
     if (rank <= 5) rankGroup = "🎯 Top 5";
@@ -295,4 +238,49 @@ async function loadWidget() {
     document.querySelector(".stats").innerHTML = `
       <div>Units: ${units}</div>
       <div>Points: ${points}</div>
-      <
+      <div>Rank: ${rank} (${rankGroup})</div>
+    `;
+
+    // Progress
+    const prevLevelPoints = currentLevel === 0 ? 0 : levels[currentLevel - 1].points;
+    const progress = ((points - prevLevelPoints) / (nextLevel.points - prevLevelPoints)) * 100;
+    const safeProgress = Math.min(Math.max(progress, 0), 100);
+
+    const bar = document.getElementById("progress-bar");
+    bar.style.width = safeProgress + "%";
+    bar.textContent = Math.floor(safeProgress) + "%";
+
+    document.getElementById("progress-text").textContent =
+      `${points} / ${nextLevel.points} Points`;
+
+  } catch (err) {
+    alert("Error loading data");
+    location.reload();
+  }
+}
+
+// TIMER
+function updateTimer() {
+  const end = new Date("2025-12-31T23:59:59Z");
+  const now = new Date();
+  const diff = end - now;
+
+  if (diff <= 0) {
+    document.getElementById("time-left").textContent = "⏰ Ended";
+    return;
+  }
+
+  const d = Math.floor(diff / (1000*60*60*24));
+  const h = Math.floor((diff / (1000*60*60)) % 24);
+  const m = Math.floor((diff / (1000*60)) % 60);
+
+  document.getElementById("time-left").textContent =
+    `⏰ ${d}d ${h}h ${m}m`;
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+</script>
+
+</body>
+</html>
