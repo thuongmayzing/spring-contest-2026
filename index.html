@@ -27,6 +27,7 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+/* INPUT */
 .email-box {
   display: flex;
   flex-direction: column;
@@ -53,39 +54,47 @@ body {
   cursor: pointer;
 }
 
+/* HEADER */
 .header {
   background: #1e2447;
   color: white;
   text-align: center;
-  padding: 30px 20px 20px;
+  padding: 30px 20px 18px;
 }
 
 .header h1 {
   margin: 0;
   font-size: 28px;
-}
-
-.header p {
-  margin: 2px 0 8px;
-  font-size: 14px;
-}
-
-.header hr {
-  width: 90%;
-  border-top: 1px solid rgba(255,255,255,0.4);
-  margin: 10px auto;
-}
-
-.level {
-  font-size: 28px;
   font-weight: 700;
 }
 
+.header p {
+  margin: 3px 0 6px;
+  font-size: 14px;
+}
+
+/* GẠCH NGANG MỜ + NGẮN */
+.header hr {
+  width: 65%;
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.25);
+  margin: 8px auto;
+}
+
+/* LEVEL NHỎ HƠN TITLE */
+.level {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+/* CONTENT */
 .content {
   text-align: center;
   padding: 30px 20px;
 }
 
+/* CIRCLE */
 .circle {
   width: 200px;
   height: 200px;
@@ -96,21 +105,25 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  line-height: 1.1;
 }
 
 .circle div:first-child {
   font-size: 12px;
 }
 
+/* POINTS = SIZE LEVEL */
 .circle .units {
-  font-size: 48px;
+  font-size: 24px;
   font-weight: 700;
+  margin: 6px 0;
 }
 
 .circle .reward {
   font-size: 14px;
 }
 
+/* STATS */
 .stats {
   display: flex;
   justify-content: space-between;
@@ -125,6 +138,7 @@ body {
   text-align: center;
 }
 
+/* PROGRESS */
 .progress-container {
   width: 90%;
   margin: 0 auto;
@@ -278,7 +292,6 @@ async function loadWidget() {
   }
 }
 
-// TIMER
 function updateTimer() {
   const end = new Date("2026-06-24T23:59:59Z");
   const now = new Date();
