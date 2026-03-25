@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -6,22 +7,67 @@
   <title>Spring Contest 2026</title>
   <style>
     body {margin:0; font-family: Gotham, Arial, sans-serif; background:#fff;}
-    .top {background:#1e2447; color:white; text-align:center; padding:30px 20px;}
-    .top h1 {margin:0; font-size:26px;}
-    .top p {margin:4px 0; font-size:14px; opacity:0.9;}
-    .divider {border-top:1px solid #ccc; margin:16px auto; max-width:240px; opacity:0.4;}
-    .level-now {font-size:20px; font-weight:600; margin-top:10px;}
-    .bottom {background:#fff; text-align:center; padding:30px 20px;}
-    .circle {width:180px; height:180px; border-radius:50%; background:#ffd166; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:20px; font-weight:700;}
-    .banner {background:#111; color:#fff; display:inline-block; padding:6px 20px; border-radius:20px; font-size:14px; margin-bottom:20px;}
-    .progress-wrap {max-width:360px; margin:0 auto;}
-    .progress-text {display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:#555;}
-    .progress-bar {height:14px; background:#eee; border-radius:10px; overflow:hidden;}
-    .progress-fill {height:100%; background:linear-gradient(90deg,#ff6f61,#fcb045); width:0%;}
-    .email-display {margin-top:12px; font-size:13px; color:#666;}
-    .login {text-align:center; margin:20px;}
-    .login input{padding:8px; border:1px solid #ccc; border-radius:6px; width:220px;}
-    .login button{padding:8px 14px; margin-left:6px; border:none; border-radius:6px; background:#1e2447; color:white; cursor:pointer;}
+
+```
+.top {background:#1e2447; color:white; text-align:center; padding:30px 20px;}
+.top h1 {margin:0; font-size:26px;}
+.top p {margin:4px 0; font-size:14px; opacity:0.9;}
+.divider {border-top:1px solid #ccc; margin:16px auto; max-width:240px; opacity:0.4;}
+.level-now {font-size:20px; font-weight:600; margin-top:10px;}
+
+.bottom {background:#fff; text-align:center; padding:30px 20px;}
+
+/* 🔥 FIX CIRCLE */
+.circle {
+  width:200px;
+  height:200px;
+  border-radius:50%;
+  border:5px solid #f4b400;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 16px;
+  text-align:center;
+}
+
+.circle .small {font-size:13px; color:#666;}
+.circle .points {font-size:28px; font-weight:700; margin:5px 0;}
+.circle .reward {font-size:18px; font-weight:600;}
+
+/* 🔥 STATS (thêm nhưng không phá layout cũ) */
+.stats {
+  display:flex;
+  justify-content:space-around;
+  max-width:320px;
+  margin:10px auto;
+  font-size:14px;
+  font-weight:700;
+}
+
+.banner {background:#111; color:#fff; display:inline-block; padding:6px 20px; border-radius:20px; font-size:14px; margin-bottom:20px;}
+
+.progress-wrap {max-width:360px; margin:0 auto;}
+
+.progress-text {
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  margin-bottom:6px;
+  color:#555;
+}
+
+.progress-bar {height:14px; background:#eee; border-radius:10px; overflow:hidden;}
+.progress-fill {height:100%; background:linear-gradient(90deg,#ff6f61,#fcb045); width:0%;}
+
+.email-display {margin-top:12px; font-size:13px; color:#666;}
+
+.login {text-align:center; margin:20px;}
+.login input{padding:8px; border:1px solid #ccc; border-radius:6px; width:220px;}
+.login button{padding:8px 14px; margin-left:6px; border:none; border-radius:6px; background:#1e2447; color:white; cursor:pointer;}
+```
+
   </style>
 </head>
 <body>
@@ -39,30 +85,42 @@
       <div class="level-now" id="currentLevel">YOU'RE ON LEVEL 1!</div>
     </div>
 
-    <div class="bottom">
-      <div class="circle" id="rewardCircle">💰 $0</div>
-      <div class="banner" id="nextBanner">LEVEL 2: 1000 POINTS</div>
+```
+<div class="bottom">
 
-      <div class="progress-wrap">
-        <div class="progress-text">
-          <span id="progressText">0 / 1000</span>
-          <span id="progressPercent">0%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-      </div>
+  <!-- 🔥 CIRCLE -->
+  <div class="circle" id="rewardCircle"></div>
 
-      <div class="email-display" id="emailDisplay"></div>
+  <!-- 🔥 STATS -->
+  <div class="stats">
+    <div id="units">Units</div>
+    <div id="points">Points</div>
+    <div id="rank">Rank</div>
+  </div>
+
+  <!-- giữ banner -->
+  <div class="banner" id="nextBanner">LEVEL 2: 1000 POINTS</div>
+
+  <div class="progress-wrap">
+    <div class="progress-text">
+      <span id="progressText">0 / 1000</span>
+      <span id="progressPercent">0%</span>
     </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div class="email-display" id="emailDisplay"></div>
+</div>
+```
+
   </div>
 
 <script>
 
-// 🔥 API của bạn (đã fix đúng)
 const apiUrl = "https://script.google.com/macros/s/AKfycbwQnBwgravJEERSGbZk1-YajdXWotR6xB58yV3UgEB6Bedeftp2WEeF39Q2uicsCfc/exec";
 
-// 🎯 LEVEL mới
 const milestones = [
   {points:1000, reward:"$200"},
   {points:2000, reward:"$500"},
@@ -73,7 +131,6 @@ const milestones = [
   {points:150000, reward:"$100,000"}
 ];
 
-// click button
 document.getElementById("viewBtn").addEventListener("click", () => {
   const userId = document.getElementById("userIdInput").value.trim();
   if (!userId) {
@@ -83,7 +140,6 @@ document.getElementById("viewBtn").addEventListener("click", () => {
   loadData(userId);
 });
 
-// gọi API
 async function loadData(userId) {
   try {
     const res = await fetch(apiUrl + "?id=" + encodeURIComponent(userId));
@@ -97,13 +153,13 @@ async function loadData(userId) {
     render(data.points, data.rank, data.userId);
 
   } catch (err) {
-    alert("API lỗi (check deploy Apps Script)");
+    alert("API lỗi");
     console.error(err);
   }
 }
 
-// render UI (giữ nguyên logic cũ)
 function render(points,userRank,userId){
+
   document.getElementById("widget").style.display="block";
 
   let currentLevel=0, next=null;
@@ -118,9 +174,14 @@ function render(points,userRank,userId){
   document.getElementById("currentLevel").textContent =
     `YOU'RE ON LEVEL ${currentLevel}!`;
 
-  document.getElementById("rewardCircle").textContent =
-    "💰 " + next.reward;
+  // 🔥 CIRCLE CONTENT
+  document.getElementById("rewardCircle").innerHTML = `
+    <div class="small">Unlock Next Level</div>
+    <div class="points">${next.points.toLocaleString()}</div>
+    <div class="reward">${next.reward}</div>
+  `;
 
+  // giữ banner
   document.getElementById("nextBanner").textContent =
     `LEVEL ${currentLevel+1}: ${next.points.toLocaleString()} POINTS`;
 
@@ -135,9 +196,14 @@ function render(points,userRank,userId){
   document.getElementById("progressFill").style.width =
     percent+"%";
 
-  // 🔥 hiển thị user + rank
+  // 🔥 STATS DATA
+  document.getElementById("units").textContent = "Units";
+  document.getElementById("points").textContent = points;
+  document.getElementById("rank").textContent = `#${userRank}`;
+
+  // 🔥 EMAIL
   document.getElementById("emailDisplay").textContent =
-    `User ID: ${userId} | Rank: #${userRank}`;
+    `Email: ${userId}`;
 }
 
 </script>
