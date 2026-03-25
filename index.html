@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Spring Contest 2026</title>
-
   <style>
     body {margin:0; font-family: Gotham, Arial, sans-serif; background:#fff;}
     .top {background:#1e2447; color:white; text-align:center; padding:30px 20px;}
@@ -12,46 +11,41 @@
     .top p {margin:4px 0; font-size:14px; opacity:0.9;}
     .divider {border-top:1px solid #ccc; margin:16px auto; max-width:240px; opacity:0.4;}
     .level-now {font-size:20px; font-weight:600; margin-top:10px;}
-
     .bottom {background:#fff; text-align:center; padding:30px 20px;}
     .circle {width:180px; height:180px; border-radius:50%; background:#ffd166; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:20px; font-weight:700;}
     .banner {background:#111; color:#fff; display:inline-block; padding:6px 20px; border-radius:20px; font-size:14px; margin-bottom:20px;}
-
     .progress-wrap {max-width:360px; margin:0 auto;}
     .progress-text {display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:#555;}
     .progress-bar {height:14px; background:#eee; border-radius:10px; overflow:hidden;}
     .progress-fill {height:100%; background:linear-gradient(90deg,#ff6f61,#fcb045); width:0%;}
-
     .email-display {margin-top:12px; font-size:13px; color:#666;}
-
     .login {text-align:center; margin:20px;}
-    .login input{padding:8px; border:1px solid #ccc; border-radius:6px; width:260px;}
+    .login input{padding:8px; border:1px solid #ccc; border-radius:6px; width:220px;}
     .login button{padding:8px 14px; margin-left:6px; border:none; border-radius:6px; background:#1e2447; color:white; cursor:pointer;}
   </style>
 </head>
-
 <body>
 
   <div class="login">
     <input type="text" id="userIdInput" placeholder="Enter your User ID"/>
-    <button id="viewBtn">Check</button>
+    <button id="viewBtn">View my widget</button>
   </div>
 
   <div id="widget" style="display:none">
     <div class="top">
-      <h1>🌸 Spring Contest 2026</h1>
-      <p>Ends 24 Jun 2026 (UK time)</p>
+      <h1>Spring Contest</h1>
+      <p>24 Mar to 24 Jun (23:59 GMT)</p>
       <div class="divider"></div>
       <div class="level-now" id="currentLevel">YOU'RE ON LEVEL 1!</div>
     </div>
 
     <div class="bottom">
       <div class="circle" id="rewardCircle">💰 $0</div>
-      <div class="banner" id="nextBanner">LEVEL 2</div>
+      <div class="banner" id="nextBanner">LEVEL 2: 1000 POINTS</div>
 
       <div class="progress-wrap">
         <div class="progress-text">
-          <span id="progressText">0 / 0</span>
+          <span id="progressText">0 / 1000</span>
           <span id="progressPercent">0%</span>
         </div>
         <div class="progress-bar">
@@ -59,13 +53,13 @@
         </div>
       </div>
 
-      <div class="email-display" id="rankDisplay"></div>
+      <div class="email-display" id="emailDisplay"></div>
     </div>
   </div>
 
 <script>
 
-// 🔥 API của bạn
+// 🔥 API của bạn (đã fix đúng)
 const apiUrl = "https://script.google.com/macros/s/AKfycbwQnBwgravJEERSGbZk1-YajdXWotR6xB58yV3UgEB6Bedeftp2WEeF39Q2uicsCfc/exec";
 
 // 🎯 LEVEL mới
@@ -79,16 +73,18 @@ const milestones = [
   {points:150000, reward:"$100,000"}
 ];
 
-document.getElementById("viewBtn").addEventListener("click", loadData);
-
-async function loadData() {
+// click button
+document.getElementById("viewBtn").addEventListener("click", () => {
   const userId = document.getElementById("userIdInput").value.trim();
-
   if (!userId) {
     alert("Please enter User ID");
     return;
   }
+  loadData(userId);
+});
 
+// gọi API
+async function loadData(userId) {
   try {
     const res = await fetch(apiUrl + "?id=" + encodeURIComponent(userId));
     const data = await res.json();
@@ -98,15 +94,16 @@ async function loadData() {
       return;
     }
 
-    render(data.points, data.rank);
+    render(data.points, data.rank, data.userId);
 
   } catch (err) {
-    alert("API error");
+    alert("API lỗi (check deploy Apps Script)");
     console.error(err);
   }
 }
 
-function render(points, rank){
+// render UI (giữ nguyên logic cũ)
+function render(points,userRank,userId){
   document.getElementById("widget").style.display="block";
 
   let currentLevel=0, next=null;
@@ -118,19 +115,29 @@ function render(points, rank){
 
   if(!next) next=milestones[milestones.length-1];
 
-  document.getElementById("currentLevel").textContent = `YOU'RE ON LEVEL ${currentLevel}!`;
-  document.getElementById("rewardCircle").textContent = "💰 " + next.reward;
-  document.getElementById("nextBanner").textContent = `LEVEL ${currentLevel+1}: ${next.points.toLocaleString()} POINTS`;
+  document.getElementById("currentLevel").textContent =
+    `YOU'RE ON LEVEL ${currentLevel}!`;
+
+  document.getElementById("rewardCircle").textContent =
+    "💰 " + next.reward;
+
+  document.getElementById("nextBanner").textContent =
+    `LEVEL ${currentLevel+1}: ${next.points.toLocaleString()} POINTS`;
 
   const percent = Math.min(100, (points/next.points)*100).toFixed(0);
 
   document.getElementById("progressText").textContent =
     `${points.toLocaleString()} / ${next.points.toLocaleString()}`;
 
-  document.getElementById("progressPercent").textContent = percent+"%";
-  document.getElementById("progressFill").style.width = percent+"%";
+  document.getElementById("progressPercent").textContent =
+    percent+"%";
 
-  document.getElementById("rankDisplay").textContent = "Rank: #" + rank;
+  document.getElementById("progressFill").style.width =
+    percent+"%";
+
+  // 🔥 hiển thị user + rank
+  document.getElementById("emailDisplay").textContent =
+    `User ID: ${userId} | Rank: #${userRank}`;
 }
 
 </script>
