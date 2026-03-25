@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spring Contest 2026</title>
+<title>Leaderboard</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -11,97 +11,70 @@
 body {
   font-family: 'Montserrat', sans-serif;
   margin: 0;
-  background-color: #f7f8fc;
+  background: #f7f8fc;
   display: flex;
   justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
   padding: 20px;
 }
 
-.container {
-  max-width: 500px;
-  width: 100%;
-  background: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.leaderboard {
-  width: 260px;
-  background: white;
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.leaderboard h3 {
-  margin: 0 0 12px;
-}
-
-.leaderboard-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  border-bottom: 1px solid #eee;
-  font-size: 14px;
-}
-
-.me {
-  font-weight: 700;
-  color: #1e2447;
-}
-
+/* LOGIN */
 .email-box {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  height: 100vh;
   gap: 12px;
+  align-items: center;
   justify-content: center;
+  height: 100vh;
 }
 
 .email-box input {
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  width: 80%;
 }
 
 .email-box button {
+  padding: 10px 20px;
   background: #1e2447;
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 10px 20px;
-  font-weight: 600;
-  cursor: pointer;
 }
 
+/* MAIN */
+.container {
+  width: 500px;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: none;
+}
+
+/* HEADER */
 .header {
   background: #1e2447;
   color: white;
   text-align: center;
-  padding: 30px 20px 18px;
+  padding: 25px;
+}
+
+.header h1 {
+  margin: 0;
 }
 
 .level {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 20px;
+  margin-top: 5px;
 }
 
-.content {
-  text-align: center;
-  padding: 30px 20px;
-}
-
+/* CIRCLE */
 .circle {
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   border: 6px solid #f4c542;
   border-radius: 50%;
-  margin: 0 auto 25px;
+  margin: 20px auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -109,160 +82,176 @@ body {
 }
 
 .circle .units {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
 }
 
-.stats {
-  display: flex;
-  justify-content: space-between;
-  width: 90%;
-  margin: 0 auto 12px;
+.circle .reward {
+  font-size: 14px;
 }
 
+/* STATS */
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px 0;
+}
+
+/* PROGRESS */
 .progress-container {
   width: 90%;
   margin: 0 auto;
-  background: #e0e0e0;
+  background: #eee;
   border-radius: 20px;
-  height: 26px;
-  overflow: hidden;
+  height: 22px;
 }
 
 .progress-bar {
   height: 100%;
   background: linear-gradient(90deg, #1e2447, #2f3e70);
   width: 0%;
+  border-radius: 20px;
   color: white;
   display: flex;
-  align-items: center;
   justify-content: flex-end;
-  padding-right: 10px;
-  border-radius: 20px;
-  transition: width 0.6s ease;
+  align-items: center;
+  padding-right: 8px;
 }
 
+/* FOOTER */
 .footer {
   text-align: center;
-  font-size: 13px;
   padding: 10px;
+  font-size: 13px;
 }
 
-#widget { display: none; }
+/* LEADERBOARD */
+.leaderboard {
+  width: 260px;
+  margin-left: 20px;
+  display: none;
+}
 
-@media (max-width: 768px) {
-  .leaderboard { width: 100%; }
+.leaderboard h2 {
+  text-align: center;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.me {
+  font-weight: bold;
+  color: #1e2447;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-
-<div class="email-box" id="email-box">
-  <input type="text" id="userIdInput" placeholder="Enter your userID">
-  <button onclick="loadWidget()">View</button>
+<!-- LOGIN -->
+<div class="email-box" id="loginBox">
+  <input id="userId" placeholder="Enter userID">
+  <button onclick="load()">View</button>
 </div>
 
-<div id="widget">
+<!-- MAIN -->
+<div class="container" id="main">
 
   <div class="header">
-    <h1>Spring Contest</h1>
-    <p>24 Mar to 24 Jun (23:59 GMT)</p>
-    <div class="level">YOU'RE ON LEVEL 0!</div>
+    <h1>Leaderboard</h1>
+    <div class="level" id="level">Level 0</div>
   </div>
 
-  <div class="content">
+  <div class="circle">
+    <div>Unlock Next Level</div>
+    <div class="units" id="pointsNext">0 Points</div>
+    <div class="reward" id="reward">---</div>
+  </div>
 
-    <div class="circle">
-      <div>Unlock Next Level</div>
-      <div class="units">...</div>
-      <div class="reward">...</div>
-    </div>
+  <div class="stats" id="stats"></div>
 
-    <div class="stats"></div>
-
-    <div class="progress-container">
-      <div class="progress-bar" id="progress-bar">0%</div>
-    </div>
-
+  <div class="progress-container">
+    <div class="progress-bar" id="progress">0%</div>
   </div>
 
   <div class="footer">
-    Email: <span id="user-email"></span>
+    Email: <span id="email"></span>
   </div>
 
 </div>
 
-</div>
-
-<div class="leaderboard">
-  <h3>🏆 Top 3</h3>
-  <div id="leaderboard-list">Loading...</div>
+<!-- LEADERBOARD -->
+<div class="leaderboard" id="board">
+  <h2>Top 3</h2>
+  <div id="list"></div>
 </div>
 
 <script>
 
-const apiUrl = "https://script.google.com/macros/s/AKfycbzmSrRs4gAKY53J8Ug9UJOd5H-NWWP9KilegorwCmhFlAdykf6DmIALCkhKMV92V_Ov5A/exec";
+const API = "https://script.google.com/macros/s/AKfycbzmSrRs4gAKY53J8Ug9UJOd5H-NWWP9KilegorwCmhFlAdykf6DmIALCkhKMV92V_Ov5A/exec";
 
-function maskEmail(email) {
-  if (!email) return "";
-  const [n, d] = email.split("@");
-  return n.slice(0,2) + "***@" + d;
+function mask(e){
+  if(!e) return "";
+  let [n,d]=e.split("@");
+  return n.slice(0,2)+"***@"+d;
 }
 
-async function loadWidget() {
-  const userId = document.getElementById("userIdInput").value.trim();
-  if (!userId) return alert("Enter userID");
+async function load(){
+  const id = document.getElementById("userId").value.trim();
 
-  document.getElementById("email-box").style.display = "none";
-  document.getElementById("widget").style.display = "block";
+  const res = await fetch(API+"?id="+id);
+  const d = await res.json();
 
-  try {
-    const res = await fetch(apiUrl + "?id=" + encodeURIComponent(userId));
-    const data = await res.json();
+  if(d.error) return alert(d.error);
 
-    if (data.error) return alert(data.error);
+  document.getElementById("loginBox").style.display="none";
+  document.getElementById("main").style.display="block";
+  document.getElementById("board").style.display="block";
 
-    render(data);
+  render(d);
+}
 
-  } catch (e) {
-    alert("Error loading");
-    console.log(e);
+function render(d){
+
+  // LEVEL LOGIC
+  let levels = [1000,2000,5000,10000,25000,50000,150000];
+  let level = 0;
+
+  for(let i=0;i<levels.length;i++){
+    if(d.points >= levels[i]) level = i+1;
   }
-}
 
-function render(data) {
+  document.getElementById("level").innerText = "Level " + level;
 
-  document.getElementById("user-email").textContent = maskEmail(data.email);
+  // NEXT LEVEL
+  let next = levels.find(x => x > d.points) || levels[levels.length-1];
 
-  document.querySelector(".level").textContent =
-    "YOU'RE ON LEVEL " + data.rank;
+  document.getElementById("pointsNext").innerText = next + " Points";
+  document.getElementById("reward").innerText = "$" + next;
 
-  document.querySelector(".stats").innerHTML = `
-    <div>Units: ${data.units}</div>
-    <div>Points: ${data.points}</div>
-    <div>Rank: ${data.rank}</div>
+  // STATS
+  document.getElementById("stats").innerHTML = `
+    <div>Units: ${d.units}</div>
+    <div>Points: ${d.points}</div>
+    <div>Rank: ${d.rank}</div>
   `;
 
-  renderLeaderboard(data);
-}
+  document.getElementById("email").innerText = mask(d.email);
 
-function renderLeaderboard(data) {
-
-  if (!data.leaderboard) return;
-
-  const top3 = data.leaderboard.slice(0,3);
-
-  let html = top3.map(u => `
-    <div class="leaderboard-item ${u.userId === data.userId ? 'me' : ''}">
-      <span>#${u.rank} ${u.userId === data.userId ? "YOU" : maskEmail(u.email)}</span>
-      <span>${u.points}</span>
-    </div>
-  `).join("");
-
-  document.getElementById("leaderboard-list").innerHTML = html;
+  // LEADERBOARD (TOP 3)
+  if(d.leaderboard){
+    document.getElementById("list").innerHTML =
+      d.leaderboard.slice(0,3).map(u => `
+        <div class="item ${u.userId === d.userId ? 'me' : ''}">
+          <span>${u.rank}. ${u.userId === d.userId ? "YOU" : mask(u.email)}</span>
+          <span>${u.points}</span>
+        </div>
+      `).join("");
+  }
 }
 
 </script>
