@@ -33,7 +33,6 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  text-align: center;
   gap: 12px;
 }
 
@@ -42,7 +41,6 @@ body {
   border-radius: 8px;
   border: 1px solid #ccc;
   width: 80%;
-  font-size: 16px;
 }
 
 .email-box button {
@@ -59,14 +57,33 @@ body {
   background: #1e2447;
   color: white;
   text-align: center;
-  padding: 40px 20px;
+  padding: 30px 20px 20px;
 }
 
-.header h1 { margin: 0; }
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.header p {
+  margin: 2px 0 8px;
+  font-size: 14px;
+}
+
+.header hr {
+  width: 90%;
+  border-top: 1px solid rgba(255,255,255,0.4);
+  margin: 10px auto;
+}
+
+.level {
+  font-size: 28px;
+  font-weight: 700;
+}
 
 .content {
   text-align: center;
-  padding: 40px 20px 30px;
+  padding: 30px 20px;
 }
 
 .circle {
@@ -74,19 +91,38 @@ body {
   height: 200px;
   border: 6px solid #f4c542;
   border-radius: 50%;
-  margin: 0 auto 30px;
+  margin: 0 auto 25px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-weight: 600;
+}
+
+.circle div:first-child {
+  font-size: 12px;
+}
+
+.circle .units {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.circle .reward {
+  font-size: 14px;
 }
 
 .stats {
   display: flex;
   justify-content: space-between;
-  margin: 10px 0 20px;
+  width: 90%;
+  margin: 0 auto 12px;
+  font-size: 14px;
   font-weight: 600;
+}
+
+.stats div {
+  flex: 1;
+  text-align: center;
 }
 
 .progress-container {
@@ -95,7 +131,6 @@ body {
   background: #e0e0e0;
   border-radius: 20px;
   height: 26px;
-  overflow: hidden;
 }
 
 .progress-bar {
@@ -107,22 +142,21 @@ body {
   align-items: center;
   justify-content: flex-end;
   padding-right: 10px;
-  transition: width 0.6s ease;
 }
 
 .footer-info {
   display: flex;
   justify-content: space-between;
   width: 90%;
-  margin: 6px auto;
+  margin: 8px auto;
+  font-size: 13px;
   color: gray;
 }
 
 .footer {
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
   padding: 10px;
-  color: gray;
 }
 
 #widget { display: none; }
@@ -142,6 +176,7 @@ body {
   <div class="header">
     <h1>Spring Contest</h1>
     <p>24 Mar to 24 Jun (23:59 GMT)</p>
+    <hr>
     <div class="level">YOU'RE ON LEVEL 0!</div>
   </div>
 
@@ -149,8 +184,8 @@ body {
 
     <div class="circle">
       <div>Unlock Next Level</div>
-      <div class="units">250 Points</div>
-      <div class="reward">$50</div>
+      <div class="units">1000 Points</div>
+      <div class="reward">$200</div>
     </div>
 
     <div class="stats"></div>
@@ -160,7 +195,7 @@ body {
     </div>
 
     <div class="footer-info">
-      <div id="progress-text">0 / 250 Points</div>
+      <div id="progress-text">0 / 1000 Points</div>
       <div id="time-left">⏰ Loading...</div>
     </div>
 
@@ -178,11 +213,7 @@ const apiUrl = "https://script.google.com/macros/s/AKfycbwQnBwgravJEERSGbZk1-Yaj
 
 async function loadWidget() {
   const userId = document.getElementById("userIdInput").value.trim();
-
-  if (!userId) {
-    alert("Please enter userID");
-    return;
-  }
+  if (!userId) return alert("Enter userID");
 
   document.getElementById("user-id").textContent = userId;
   document.getElementById("email-box").style.display = "none";
@@ -193,26 +224,23 @@ async function loadWidget() {
     const data = await res.json();
 
     if (data.error) {
-      alert("UserID not found!");
+      alert("User not found");
       location.reload();
       return;
     }
 
-    const units = parseInt(data.units || 0);
-    const points = parseInt(data.points || 0);
-    const rank = parseInt(data.rank || 0);
+    const units = +data.units || 0;
+    const points = +data.points || 0;
+    const rank = +data.rank || 0;
 
     const levels = [
-      { points: 250, reward: "$50" },
-      { points: 500, reward: "$100" },
-      { points: 1500, reward: "$500" },
-      { points: 2500, reward: "$750" },
-      { points: 5000, reward: "$2000" },
-      { points: 10000, reward: "$5000" },
-      { points: 25000, reward: "$12500" },
-      { points: 50000, reward: "$25000" },
-      { points: 100000, reward: "$75000" },
-      { points: 125000, reward: "$100000" }
+      { points: 1000, reward: "$200" },
+      { points: 2000, reward: "$500" },
+      { points: 5000, reward: "$1,500" },
+      { points: 10000, reward: "$3,500" },
+      { points: 25000, reward: "$10,000" },
+      { points: 50000, reward: "$25,000" },
+      { points: 150000, reward: "$100,000" }
     ];
 
     let currentLevel = 0;
@@ -234,21 +262,19 @@ async function loadWidget() {
       <div>Rank: ${rank}</div>
     `;
 
-    // Progress
-    const prevLevelPoints = currentLevel === 0 ? 0 : levels[currentLevel - 1].points;
-    const progress = ((points - prevLevelPoints) / (nextLevel.points - prevLevelPoints)) * 100;
-    const safeProgress = Math.min(Math.max(progress, 0), 100);
+    const prev = currentLevel === 0 ? 0 : levels[currentLevel - 1].points;
+    const progress = ((points - prev) / (nextLevel.points - prev)) * 100;
+    const safe = Math.max(0, Math.min(100, progress));
 
     const bar = document.getElementById("progress-bar");
-    bar.style.width = safeProgress + "%";
-    bar.textContent = Math.floor(safeProgress) + "%";
+    bar.style.width = safe + "%";
+    bar.textContent = Math.floor(safe) + "%";
 
     document.getElementById("progress-text").textContent =
-      `${points} / ${nextLevel.points} Points`;
+      `${points} / ${nextLevel.points}`;
 
-  } catch (err) {
-    alert("Error loading data");
-    location.reload();
+  } catch {
+    alert("Error");
   }
 }
 
@@ -258,10 +284,7 @@ function updateTimer() {
   const now = new Date();
   const diff = end - now;
 
-  if (diff <= 0) {
-    document.getElementById("time-left").textContent = "⏰ Ended";
-    return;
-  }
+  if (diff <= 0) return document.getElementById("time-left").textContent = "Ended";
 
   const d = Math.floor(diff / (1000*60*60*24));
   const h = Math.floor((diff / (1000*60*60)) % 24);
