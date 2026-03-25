@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Christmas Contest 2025</title>
+<title>Spring Contest 2026</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -140,8 +140,8 @@ body {
 <div id="widget">
 
   <div class="header">
-    <h1>Christmas Contest</h1>
-    <p>20 Sep to 31 Dec</p>
+    <h1>Spring Contest</h1>
+    <p>24 Mar to 24 Jun (23:59 GMT)</p>
     <div class="level">YOU'RE ON LEVEL 0!</div>
   </div>
 
@@ -228,17 +228,10 @@ async function loadWidget() {
     document.querySelector(".units").textContent = nextLevel.points + " Points";
     document.querySelector(".reward").textContent = nextLevel.reward;
 
-    let rankGroup = "";
-    if (rank <= 5) rankGroup = "🎯 Top 5";
-    else if (rank <= 10) rankGroup = "🔥 Top 10";
-    else if (rank <= 15) rankGroup = "⭐ Top 15";
-    else if (rank <= 20) rankGroup = "💪 Top 20";
-    else rankGroup = "📊 Outside Top 20";
-
     document.querySelector(".stats").innerHTML = `
       <div>Units: ${units}</div>
       <div>Points: ${points}</div>
-      <div>Rank: ${rank} (${rankGroup})</div>
+      <div>Rank: ${rank}</div>
     `;
 
     // Progress
@@ -261,7 +254,7 @@ async function loadWidget() {
 
 // TIMER
 function updateTimer() {
-  const end = new Date("2025-12-31T23:59:59Z");
+  const end = new Date("2026-06-24T23:59:59Z");
   const now = new Date();
   const diff = end - now;
 
