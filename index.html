@@ -27,7 +27,6 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* INPUT */
 .email-box {
   display: flex;
   flex-direction: column;
@@ -54,7 +53,6 @@ body {
   cursor: pointer;
 }
 
-/* HEADER */
 .header {
   background: #1e2447;
   color: white;
@@ -68,13 +66,11 @@ body {
   font-weight: 700;
 }
 
-/* tăng spacing */
 .header p {
   margin: 6px 0 10px;
   font-size: 14px;
 }
 
-/* gạch ngang đúng độ dài dòng date */
 .header hr {
   width: 260px;
   max-width: 70%;
@@ -89,13 +85,11 @@ body {
   margin-top: 6px;
 }
 
-/* CONTENT */
 .content {
   text-align: center;
   padding: 30px 20px;
 }
 
-/* CIRCLE */
 .circle {
   width: 200px;
   height: 200px;
@@ -109,10 +103,8 @@ body {
   line-height: 1.15;
 }
 
-/* fix text bình thường lại + to hơn */
 .circle div:first-child {
   font-size: 14px;
-  opacity: 1;
 }
 
 .circle .units {
@@ -123,10 +115,8 @@ body {
 
 .circle .reward {
   font-size: 15px;
-  opacity: 1;
 }
 
-/* STATS */
 .stats {
   display: flex;
   justify-content: space-between;
@@ -141,7 +131,6 @@ body {
   text-align: center;
 }
 
-/* PROGRESS */
 .progress-container {
   width: 90%;
   margin: 0 auto;
@@ -160,7 +149,7 @@ body {
   align-items: center;
   justify-content: flex-end;
   padding-right: 10px;
-  border-radius: 20px; /* FIX bo góc */
+  border-radius: 20px;
 }
 
 .footer-info {
@@ -221,20 +210,19 @@ body {
   </div>
 
   <div class="footer">
-    UserID: <span id="user-id"></span>
+    Email: <span id="user-email"></span>
   </div>
 
 </div>
 </div>
 
 <script>
-const apiUrl = "https://script.google.com/macros/s/AKfycbwuJrqzOLMlePVXxjSemdzbmsplK7gRN4QJdXRjyoS-DySFboPN1OtKJtpgjs_GInbg/exec";
+const apiUrl = "https://script.google.com/macros/s/AKfycbw3sbbk1idg4V2GR3HecPXtoKMwe-AV48NyZSUqgqCnnabZKCbm9y3Qs8920bzbfRfJ6w/exec";
 
 async function loadWidget() {
   const userId = document.getElementById("userIdInput").value.trim();
   if (!userId) return alert("Enter userID");
 
-  document.getElementById("user-id").textContent = userId;
   document.getElementById("email-box").style.display = "none";
   document.getElementById("widget").style.display = "block";
 
@@ -247,6 +235,10 @@ async function loadWidget() {
       location.reload();
       return;
     }
+
+    // ✅ Lấy email từ backend
+    const email = data.email || "";
+    document.getElementById("user-email").textContent = email;
 
     const units = +data.units || 0;
     const points = +data.points || 0;
