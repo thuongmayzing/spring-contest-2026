@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spring Contest</title>
+
+<style>
+body {
+  font-family: Arial;
+  text-align: center;
+  background: #f7f8fc;
+}
+
+.container {
+  margin-top: 50px;
+}
+
+input {
+  padding: 10px;
+  width: 200px;
+}
+
+button {
+  padding: 10px;
+  background: #1e2447;
+  color: white;
+  border: none;
+}
+
+.box {
+  margin-top: 20px;
+  padding: 20px;
+  background: white;
+  display: inline-block;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h2>Spring Contest</h2>
+
+  <input id="userIdInput" placeholder="Enter your User ID">
+  <button onclick="loadData()">Check</button>
+
+  <div id="result" class="box" style="display:none;"></div>
+
+</div>
+
+<script>
+
+const apiUrl = "https://script.google.com/macros/s/AKfycbxeJ2uEnKU2fZ10CKmCzvCsFdZCQYjkT4lizD7-1XXv-Vt189fDjOi47w3ucGwNQJY7pw/exec";
+
+async function loadData() {
+  const userId = document.getElementById("userIdInput").value.trim();
+
+  const res = await fetch(apiUrl + "?id=" + userId);
+  const data = await res.json();
+
+  if (data.error) {
+    alert("User not found");
+    return;
+  }
+
+  document.getElementById("result").style.display = "block";
+  document.getElementById("result").innerHTML = `
+    <p><b>Units:</b> ${data.units}</p>
+    <p><b>Points:</b> ${data.points}</p>
+    <p><b>Rank:</b> #${data.rank}</p>
+  `;
+}
+
+</script>
+
+</body>
+</html>
