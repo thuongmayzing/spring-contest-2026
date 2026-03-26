@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaderboard - Spring Contest 2026</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  background-color: #f7f8fc;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.container {
+  max-width: 500px;
+  width: 100%;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 20px;
+}
+
+h1 { text-align: center; color: #1e2447; }
+
+#pin-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 40px;
+}
+
+#pin-box input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 80%;
+  text-align: center;
+}
+
+#pin-box button {
+  background: #1e2447;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.leaderboard {
+  display: none;
+  margin-top: 20px;
+}
+
+.leaderboard h3 {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.leaderboard-item.me {
+  font-weight: 700;
+  color: #1e2447;
+}
+
+@media (max-width: 768px) {
+  .container { width: 100%; }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <h1>Leaderboard</h1>
+
+  <div id="pin-box">
+    <input type="password" id="pinInput" placeholder="Enter PIN">
+    <button onclick="checkPin()">View Leaderboard</button>
+  </div>
+
+  <div class="leaderboard" id="leaderboard">
+    <h3>🏆 Top Sellers</h3>
+    <div id="leaderboard-list">Loading...</div>
+  </div>
+
+</div>
+
+<script>
+const apiUrl = "https://script.google.com/macros/s/AKfycbzmSrRs4gAKY53J8Ug9UJOd5H-NWWP9KilegorwCmhFlAdykf6DmIALCkhKMV92V_Ov5A/exec";
+
+// ----- MASK EMAIL -----
+function maskEmail(email) {
+  if (!email) return "";
+  const [n, d] = email.split("@");
+  return n.slice(0,2) + "***@" + d;
+}
+
+// ----- PIN PROTECTION -----
+function checkPin() {
+  const pin = document.getElementById("pinInput").value;
+  const correctPin = "1234"; // đổi PIN tùy ý
+  if (pin === correctPin) {
+    document.getElementById("pin-box").style.display = "none";
+    document.getElementById("leaderboard").style.display = "block";
+    loadLeaderboard();
+  } else {
+    alert("Wrong PIN");
+  }
+}
+
+// ----- LOAD LEADERBOARD -----
+async function loadLeaderboard() {
+  try {
+    const res = await fetch(apiUrl);
+    const data = await res.json();
+
+    if (!data.leaderboard) {
+      document.getElementById("leaderboard-list").textContent = "No leaderboard data";
+      return;
+    }
+
+    // Sort points descending
+    const sorted = data.leaderboard.sort((a,b) => b.points - a.points);
+
+    // Take top 5
+    const top5 = sorted.slice(0,5);
+
+    const html = top5.map((u, idx) => `
+      <div class="leaderboard-item ${u.userId === data.userId ? 'me' : ''}">
+        <span>#${idx+1} ${u.userId === data.userId ? "YOU" : maskEmail(u.email)}</span>
+        <span>${u.points}</span>
+      </div>
+    `).join("");
+
+    document.getElementById("leaderboard-list").innerHTML = html;
+
+  } catch (e) {
+    console.error(e);
+    document.getElementById("leaderboard-list").textContent = "Error loading data";
+  }
+}
+</script>
+
+</body>
+</html>
