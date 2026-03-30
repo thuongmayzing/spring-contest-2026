@@ -30,6 +30,27 @@ h2 {
   margin-bottom: 20px;
 }
 
+.input-box {
+  text-align: center;
+}
+
+.input-box input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 80%;
+  margin-bottom: 10px;
+}
+
+.input-box button {
+  background: #1e2447;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 .item {
   display: flex;
   justify-content: space-between;
@@ -46,21 +67,38 @@ h2 {
   font-weight: 700;
   color: #f4c542;
 }
+
+.me {
+  font-weight: 700;
+  color: #1e2447;
+}
 </style>
 </head>
 
 <body>
 
 <div class="container">
+
   <h2>🏆 Leaderboard</h2>
-  <div id="list">Loading...</div>
+
+  <!-- LOGIN -->
+  <div class="input-box" id="login">
+    <input type="text" id="userIdInput" placeholder="Enter your userID">
+    <br>
+    <button onclick="start()">View Leaderboard</button>
+  </div>
+
+  <!-- LIST -->
+  <div id="list" style="display:none;">Loading...</div>
+
 </div>
 
 <script>
 
-// 🔥 DÁN LINK APPS SCRIPT MỚI VÀO ĐÂY
-const apiUrl = "https://script.google.com/macros/s/AKfycbwQ4RRFvXuxfNaSUhyEidXEP5dWVHLFHG40LZEY6ZcwC0oLuPdVQbzotEg-3iSPkqaKOQ/exec";
-const pin = "1234";
+// 🔥 API MỚI CỦA BẠN
+const apiUrl = "https://script.google.com/macros/s/AKfycbxqMnKiGUsRBL-smF4oUcwDdEN25Z2YzFwYmwYdvAQ-e95YWizWeygXDjM6BNnY2Vw3IQ/exec";
+
+let currentUserId = "";
 
 // mask email
 function maskEmail(email){
@@ -69,36 +107,71 @@ function maskEmail(email){
   return n.slice(0,2) + "***@" + d;
 }
 
+// start
+function start(){
+  const userId = document.getElementById("userIdInput").value.trim();
+
+  if(!userId) return alert("Enter userID");
+
+  currentUserId = userId;
+
+  document.getElementById("login").style.display = "none";
+  document.getElementById("list").style.display = "block";
+
+  loadLeaderboard();
+}
+
+// load
 async function loadLeaderboard(){
-
-  try {
-
-    const res = await fetch(apiUrl + "?pin=" + pin);
+  try{
+    const res = await fetch(apiUrl + "?userId=" + encodeURIComponent(currentUserId));
     const text = await res.text();
+
+    console.log("RAW:", text);
 
     const data = JSON.parse(text);
 
-    if (data.error) {
+    if(data.error){
       document.getElementById("list").textContent = data.error;
       return;
     }
 
-    const html = data.leaderboard.map(u => `
-      <div class="item ${u.rank === 1 ? 'top1' : ''}">
-        <span>#${u.rank} ${maskEmail(u.email)}</span>
-        <span>${u.points}</span>
-      </div>
-    `).join("");
+    renderLeaderboard(data);
 
-    document.getElementById("list").innerHTML = html;
-
-  } catch (err) {
+  }catch(e){
     document.getElementById("list").textContent = "Error loading";
-    console.log(err);
+    console.log(e);
   }
 }
 
-loadLeaderboard();
+// render
+function renderLeaderboard(data){
+
+  const list = data.leaderboard || [];
+
+  let html = list.map(u => `
+    <div class="item ${u.userId === currentUserId ? 'me' : ''} ${u.rank === 1 ? 'top1' : ''}">
+      <span>
+        #${u.rank} ${u.userId === currentUserId ? "YOU" : maskEmail(u.email)}
+      </span>
+      <span>${u.points}</span>
+    </div>
+  `).join("");
+
+  // nếu YOU không nằm trong top
+  const isInTop = list.some(u => u.userId === currentUserId);
+
+  if(!isInTop){
+    html += `
+      <div class="item me">
+        <span>#-- YOU</span>
+        <span>-</span>
+      </div>
+    `;
+  }
+
+  document.getElementById("list").innerHTML = html;
+}
 
 </script>
 
