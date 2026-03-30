@@ -56,11 +56,6 @@ h2 {
   justify-content: space-between;
   padding: 10px 0;
   border-bottom: 1px solid #eee;
-  font-size: 14px;
-}
-
-.item:last-child {
-  border-bottom: none;
 }
 
 .top1 {
@@ -81,22 +76,20 @@ h2 {
 
   <h2>🏆 Leaderboard</h2>
 
-  <!-- LOGIN -->
   <div class="input-box" id="login">
     <input type="text" id="userIdInput" placeholder="Enter your userID">
     <br>
     <button onclick="start()">View Leaderboard</button>
   </div>
 
-  <!-- LIST -->
   <div id="list" style="display:none;">Loading...</div>
 
 </div>
 
 <script>
 
-// 🔥 API MỚI CỦA BẠN
-const apiUrl = "https://script.google.com/macros/s/AKfycbxqMnKiGUsRBL-smF4oUcwDdEN25Z2YzFwYmwYdvAQ-e95YWizWeygXDjM6BNnY2Vw3IQ/exec";
+// 🔥 DÁN LINK MỚI CỦA BẠN
+const apiUrl = "https://script.google.com/macros/s/AKfycbzTSj1U1dX-AR8_OZcNMnbTB1Zdwwx9qhuMkAV8-prVKm26dnHDfdeFaMJ_WOY0RbV3hA/exec";
 
 let currentUserId = "";
 
@@ -121,27 +114,26 @@ function start(){
   loadLeaderboard();
 }
 
-// load
-async function loadLeaderboard(){
-  try{
-    const res = await fetch(apiUrl + "?userId=" + encodeURIComponent(currentUserId));
-    const text = await res.text();
+// JSONP load
+function loadLeaderboard(){
 
-    console.log("RAW:", text);
+  const url = apiUrl + "?userId=" + encodeURIComponent(currentUserId) + "&callback=handleData";
 
-    const data = JSON.parse(text);
+  const script = document.createElement("script");
+  script.src = url;
 
-    if(data.error){
-      document.getElementById("list").textContent = data.error;
-      return;
-    }
+  document.body.appendChild(script);
+}
 
-    renderLeaderboard(data);
+// callback
+function handleData(data){
 
-  }catch(e){
-    document.getElementById("list").textContent = "Error loading";
-    console.log(e);
+  if(data.error){
+    document.getElementById("list").textContent = data.error;
+    return;
   }
+
+  renderLeaderboard(data);
 }
 
 // render
@@ -158,7 +150,6 @@ function renderLeaderboard(data){
     </div>
   `).join("");
 
-  // nếu YOU không nằm trong top
   const isInTop = list.some(u => u.userId === currentUserId);
 
   if(!isInTop){
