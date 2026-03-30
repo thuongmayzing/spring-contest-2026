@@ -34,15 +34,8 @@ body {
   padding: 30px 20px 18px;
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 28px;
-}
-
-.header p {
-  margin: 6px 0 10px;
-  font-size: 14px;
-}
+.header h1 { margin: 0; font-size: 28px; }
+.header p { margin: 6px 0 10px; font-size: 14px; }
 
 .header hr {
   width: 260px;
@@ -74,14 +67,8 @@ body {
   align-items: center;
 }
 
-.circle .units {
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.circle .reward {
-  font-size: 14px;
-}
+.circle .units { font-size: 24px; font-weight: 700; }
+.circle .reward { font-size: 14px; }
 
 .progress-container {
   width: 90%;
@@ -101,7 +88,6 @@ body {
   align-items: center;
   justify-content: flex-end;
   padding-right: 10px;
-  transition: width 0.6s ease;
 }
 
 .footer-info {
@@ -127,13 +113,17 @@ body {
   border-bottom: 1px solid #eee;
 }
 
-.row.header {
-  font-weight: 700;
-}
+.row.header { font-weight: 700; }
 
 .row.top {
   background: #fff7d6;
   font-weight: 600;
+}
+
+.empty {
+  text-align: center;
+  color: #999;
+  padding: 10px;
 }
 
 </style>
@@ -185,11 +175,11 @@ body {
 const apiUrl = "https://script.google.com/macros/s/AKfycbw-W_GTkq-BmpNDv8ZfN4psO_e4Rq4f5obqFFi7HwKJLVCYSjNqP3O0Ft6Y6wSK06zXkQ/exec";
 
 function maskEmail(email){
+  if(!email) return "-";
   const [n,d] = email.split("@");
   return n.slice(0,2) + "***@" + d;
 }
 
-// JSONP
 function loadTeam(){
   const cb = "cb";
   window[cb] = data => render(data);
@@ -201,16 +191,18 @@ function loadTeam(){
 
 function render(data){
 
-  const users = data.users || [];
-  const totalPoints = data.totalPoints || 0;
-  const totalUnits = data.totalUnits || 0;
+  console.log("API DATA:", data); // 👈 debug cực quan trọng
 
+  const users = Array.isArray(data.users) ? data.users : [];
+
+  const totalPoints = +data.totalPoints || 0;
+  const totalUnits = +data.totalUnits || 0;
+
+  // LEVEL
   const levels = [
     { points: 1000, reward: "$200" },
     { points: 2000, reward: "$500" },
-    { points: 5000, reward: "$1,500" },
-    { points: 10000, reward: "$3,500" },
-    { points: 25000, reward: "$10,000" }
+    { points: 5000, reward: "$1,500" }
   ];
 
   let level = 0;
@@ -238,17 +230,26 @@ function render(data){
   document.getElementById("progress-text").textContent =
     `${totalPoints} / ${next.points}`;
 
-  // TOP USER
-  const top = users.reduce((a,b)=> a.points > b.points ? a : b, users[0]);
+  // 👑 TOP USER (nếu có)
+  let topUser = null;
+  if(users.length){
+    topUser = users.reduce((a,b)=> a.points > b.points ? a : b);
+  }
 
-  // table
-  const html = users.map(u => `
-    <div class="row ${u.userId === top.userId ? 'top' : ''}">
-      <div>${maskEmail(u.email)}</div>
-      <div>${u.units}</div>
-      <div>${u.points}</div>
-    </div>
-  `).join("");
+  // TABLE
+  let html = "";
+
+  if(users.length === 0){
+    html = `<div class="empty">No user data</div>`;
+  } else {
+    html = users.map(u => `
+      <div class="row ${topUser && u.userId === topUser.userId ? 'top' : ''}">
+        <div>${maskEmail(u.email)}</div>
+        <div>${u.units || 0}</div>
+        <div>${u.points || 0}</div>
+      </div>
+    `).join("");
+  }
 
   document.getElementById("table-body").innerHTML = html;
 }
