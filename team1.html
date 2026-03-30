@@ -70,9 +70,24 @@ body {
 .circle .units { font-size: 24px; font-weight: 700; }
 .circle .reward { font-size: 14px; }
 
+/* ✅ STATS */
+.stats {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  margin: 10px auto 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.stats div {
+  flex: 1;
+  text-align: center;
+}
+
 .progress-container {
   width: 90%;
-  margin: 15px auto;
+  margin: 0 auto;
   background: #e0e0e0;
   border-radius: 20px;
   height: 26px;
@@ -88,15 +103,6 @@ body {
   align-items: center;
   justify-content: flex-end;
   padding-right: 10px;
-}
-
-.footer-info {
-  display: flex;
-  justify-content: space-between;
-  width: 90%;
-  margin: 8px auto;
-  font-size: 13px;
-  color: gray;
 }
 
 /* TABLE */
@@ -118,12 +124,6 @@ body {
 .row.top {
   background: #fff7d6;
   font-weight: 600;
-}
-
-.empty {
-  text-align: center;
-  color: #999;
-  padding: 10px;
 }
 
 </style>
@@ -148,15 +148,16 @@ body {
       <div class="reward" id="reward">...</div>
     </div>
 
+    <!-- ✅ TEAM STATS -->
+    <div class="stats" id="team-stats"></div>
+
     <div class="progress-container">
       <div class="progress-bar" id="progress-bar">0%</div>
     </div>
 
-    <div class="footer-info">
-      <div id="progress-text">...</div>
-      <div id="time-left">⏰ Loading...</div>
-    </div>
+    <div id="progress-text" style="margin-top:6px; font-size:13px; color:gray;"></div>
 
+    <!-- TABLE -->
     <div class="table">
       <div class="row header">
         <div>Email</div>
@@ -172,7 +173,7 @@ body {
 
 <script>
 
-const apiUrl = "https://script.google.com/macros/s/AKfycbwxCKNSF1ouvi0yf0wvVUTpAnvo-NX-sjib3Br1FoV5_zgZOqbE4fvBu5m44oUap8Iziw/exec";
+const apiUrl = "https://script.google.com/macros/s/AKfycbw-W_GTkq-BmpNDv8ZfN4psO_e4Rq4f5obqFFi7HwKJLVCYSjNqP3O0Ft6Y6wSK06zXkQ/exec";
 
 function maskEmail(email){
   if(!email) return "-";
@@ -190,8 +191,6 @@ function loadTeam(){
 }
 
 function render(data){
-
-  console.log("API DATA:", data); // 👈 debug cực quan trọng
 
   const users = Array.isArray(data.users) ? data.users : [];
 
@@ -218,6 +217,17 @@ function render(data){
   document.getElementById("units").textContent = next.points + " Points";
   document.getElementById("reward").textContent = next.reward;
 
+  // ✅ TEAM STATS (3 cột)
+  const now = new Date();
+  const end = new Date("2026-06-24T23:59:59Z");
+  const days = Math.max(0, Math.floor((end - now) / (1000*60*60*24)));
+
+  document.getElementById("team-stats").innerHTML = `
+    <div>Units: ${totalUnits}</div>
+    <div>Points: ${totalPoints}</div>
+    <div>${days} days</div>
+  `;
+
   // progress
   const prev = level === 0 ? 0 : levels[level-1].points;
   const progress = ((totalPoints - prev) / (next.points - prev)) * 100;
@@ -228,50 +238,25 @@ function render(data){
   bar.textContent = Math.floor(safe) + "%";
 
   document.getElementById("progress-text").textContent =
-    `${totalPoints} / ${next.points}`points`;
+    `${totalPoints} / ${next.points} points`;
 
-  // 👑 TOP USER (nếu có)
-  let topUser = null;
+  // TOP USER
+  let top = null;
   if(users.length){
-    topUser = users.reduce((a,b)=> a.points > b.points ? a : b);
+    top = users.reduce((a,b)=> a.points > b.points ? a : b);
   }
 
   // TABLE
-  let html = "";
-
-  if(users.length === 0){
-    html = `<div class="empty">No user data</div>`;
-  } else {
-    html = users.map(u => `
-      <div class="row ${topUser && u.userId === topUser.userId ? 'top' : ''}">
-        <div>${maskEmail(u.email)}</div>
-        <div>${u.units || 0}</div>
-        <div>${u.points || 0}</div>
-      </div>
-    `).join("");
-  }
+  const html = users.map(u => `
+    <div class="row ${top && u.userId === top.userId ? 'top' : ''}">
+      <div>${maskEmail(u.email)}</div>
+      <div>${u.units || 0}</div>
+      <div>${u.points || 0}</div>
+    </div>
+  `).join("");
 
   document.getElementById("table-body").innerHTML = html;
 }
-
-// TIMER
-function updateTimer() {
-  const end = new Date("2026-06-24T23:59:59Z");
-  const now = new Date();
-  const diff = end - now;
-
-  if (diff <= 0) return document.getElementById("time-left").textContent = "Ended";
-
-  const d = Math.floor(diff / (1000*60*60*24));
-  const h = Math.floor((diff / (1000*60*60)) % 24);
-  const m = Math.floor((diff / (1000*60)) % 60);
-
-  document.getElementById("time-left").textContent =
-    `⏰ ${d}d ${h}h ${m}m`;
-}
-
-setInterval(updateTimer, 1000);
-updateTimer();
 
 loadTeam();
 
