@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Team Dashboard</title>
+<title>Spring Contest 2026</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 body {
   font-family: 'Montserrat', sans-serif;
   margin: 0;
-  background: #f7f8fc;
+  background-color: #f7f8fc;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,33 +19,52 @@ body {
 }
 
 .container {
-  max-width: 520px;
+  max-width: 500px;
   width: 90%;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .header {
   background: #1e2447;
   color: white;
   text-align: center;
-  padding: 25px;
+  padding: 30px 20px 18px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.header p {
+  margin: 6px 0 10px;
+  font-size: 14px;
+}
+
+.header hr {
+  width: 260px;
+  max-width: 70%;
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.25);
+  margin: 6px auto;
 }
 
 .level {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
 }
 
 .content {
-  padding: 20px;
+  text-align: center;
+  padding: 25px 20px;
 }
 
 .circle {
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
   border: 6px solid #f4c542;
   border-radius: 50%;
   margin: 0 auto 20px;
@@ -55,52 +74,68 @@ body {
   align-items: center;
 }
 
-.units {
-  font-size: 22px;
+.circle .units {
+  font-size: 24px;
   font-weight: 700;
 }
 
-.reward {
+.circle .reward {
   font-size: 14px;
 }
 
-.user-list {
-  margin-top: 20px;
-}
-
-.user {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  font-size: 13px;
-}
-
-.user.top {
-  background: #fff7d6;
-  font-weight: 700;
-}
-
-.progress-mini {
-  height: 6px;
-  background: #eee;
-  border-radius: 10px;
-  margin-top: 5px;
+.progress-container {
+  width: 90%;
+  margin: 15px auto;
+  background: #e0e0e0;
+  border-radius: 20px;
+  height: 26px;
   overflow: hidden;
 }
 
-.progress-mini div {
+.progress-bar {
   height: 100%;
-  background: #1e2447;
+  background: linear-gradient(90deg, #1e2447, #2f3e70);
+  width: 0%;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  transition: width 0.6s ease;
 }
 
-.footer {
-  text-align: center;
-  padding: 15px;
-  font-weight: 600;
-  font-size: 14px;
-  border-top: 1px solid #eee;
+.footer-info {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  margin: 8px auto;
+  font-size: 13px;
+  color: gray;
 }
+
+/* TABLE */
+.table {
+  width: 90%;
+  margin: 20px auto;
+  font-size: 13px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.row.header {
+  font-weight: 700;
+}
+
+.row.top {
+  background: #fff7d6;
+  font-weight: 600;
+}
+
 </style>
 </head>
 
@@ -108,39 +143,54 @@ body {
 
 <div class="container">
 
-<div class="header">
-  <div class="level" id="level">TEAM LEVEL</div>
-</div>
-
-<div class="content">
-
-  <div class="circle">
-    <div>Next Level</div>
-    <div class="units" id="units">...</div>
-    <div class="reward" id="reward">...</div>
+  <div class="header">
+    <h1>Spring Contest</h1>
+    <p>24 Mar to 24 Jun (23:59 GMT)</p>
+    <hr>
+    <div class="level" id="level">YOU'RE ON LEVEL 0!</div>
   </div>
 
-  <div id="user-list" class="user-list"></div>
+  <div class="content">
 
-</div>
+    <div class="circle">
+      <div>Unlock Next Level</div>
+      <div class="units" id="units">...</div>
+      <div class="reward" id="reward">...</div>
+    </div>
 
-<div class="footer">
-  Total Units: <span id="total-units"></span> |
-  Total Points: <span id="total-points"></span>
-</div>
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar">0%</div>
+    </div>
+
+    <div class="footer-info">
+      <div id="progress-text">...</div>
+      <div id="time-left">⏰ Loading...</div>
+    </div>
+
+    <div class="table">
+      <div class="row header">
+        <div>Email</div>
+        <div>Units</div>
+        <div>Points</div>
+      </div>
+      <div id="table-body"></div>
+    </div>
+
+  </div>
 
 </div>
 
 <script>
 
-const apiUrl = "https://script.google.com/macros/s/AKfycbwxCKNSF1ouvi0yf0wvVUTpAnvo-NX-sjib3Br1FoV5_zgZOqbE4fvBu5m44oUap8Iziw/exec";
+const apiUrl = "https://script.google.com/macros/s/AKfycbw-W_GTkq-BmpNDv8ZfN4psO_e4Rq4f5obqFFi7HwKJLVCYSjNqP3O0Ft6Y6wSK06zXkQ/exec";
 
-function maskEmail(email) {
-  const [n, d] = email.split("@");
+function maskEmail(email){
+  const [n,d] = email.split("@");
   return n.slice(0,2) + "***@" + d;
 }
 
-function loadTeam() {
+// JSONP
+function loadTeam(){
   const cb = "cb";
   window[cb] = data => render(data);
 
@@ -149,62 +199,78 @@ function loadTeam() {
   document.body.appendChild(s);
 }
 
-function render(data) {
+function render(data){
 
   const users = data.users || [];
   const totalPoints = data.totalPoints || 0;
   const totalUnits = data.totalUnits || 0;
 
-  document.getElementById("total-units").textContent = totalUnits;
-  document.getElementById("total-points").textContent = totalPoints;
-
-  // LEVEL
   const levels = [
     { points: 1000, reward: "$200" },
     { points: 2000, reward: "$500" },
     { points: 5000, reward: "$1,500" },
-    { points: 10000, reward: "$3,500" }
+    { points: 10000, reward: "$3,500" },
+    { points: 25000, reward: "$10,000" }
   ];
 
   let level = 0;
-  for (let i=0;i<levels.length;i++) {
-    if (totalPoints >= levels[i].points) level = i+1;
+  for(let i=0;i<levels.length;i++){
+    if(totalPoints >= levels[i].points) level = i+1;
   }
 
-  document.getElementById("level").textContent = "TEAM LEVEL " + level;
+  document.getElementById("level").textContent =
+    `YOU'RE ON LEVEL ${level}!`;
 
   const next = levels.find(l => l.points > totalPoints) || levels[levels.length-1];
 
-  document.getElementById("units").textContent = next.points + " pts";
+  document.getElementById("units").textContent = next.points + " Points";
   document.getElementById("reward").textContent = next.reward;
 
+  // progress
+  const prev = level === 0 ? 0 : levels[level-1].points;
+  const progress = ((totalPoints - prev) / (next.points - prev)) * 100;
+  const safe = Math.max(0, Math.min(100, progress));
+
+  const bar = document.getElementById("progress-bar");
+  bar.style.width = safe + "%";
+  bar.textContent = Math.floor(safe) + "%";
+
+  document.getElementById("progress-text").textContent =
+    `${totalPoints} / ${next.points}`;
+
   // TOP USER
-  const topUser = users.reduce((a,b)=> a.points > b.points ? a : b, users[0]);
+  const top = users.reduce((a,b)=> a.points > b.points ? a : b, users[0]);
 
-  // LIST
-  const html = users.map(u => {
-    const percent = totalPoints ? Math.round(u.points / totalPoints * 100) : 0;
+  // table
+  const html = users.map(u => `
+    <div class="row ${u.userId === top.userId ? 'top' : ''}">
+      <div>${maskEmail(u.email)}</div>
+      <div>${u.units}</div>
+      <div>${u.points}</div>
+    </div>
+  `).join("");
 
-    return `
-      <div class="user ${u.userId === topUser.userId ? 'top' : ''}">
-        <div>
-          ${u.userId === topUser.userId ? '👑 ' : ''}
-          ${maskEmail(u.email)}<br>
-          ${percent}%
-          <div class="progress-mini">
-            <div style="width:${percent}%"></div>
-          </div>
-        </div>
-        <div>
-          ${u.units} u<br>
-          ${u.points} pts
-        </div>
-      </div>
-    `;
-  }).join("");
-
-  document.getElementById("user-list").innerHTML = html;
+  document.getElementById("table-body").innerHTML = html;
 }
+
+// TIMER
+function updateTimer() {
+  const end = new Date("2026-06-24T23:59:59Z");
+  const now = new Date();
+  const diff = end - now;
+
+  if (diff <= 0) return document.getElementById("time-left").textContent = "Ended";
+
+  const d = Math.floor(diff / (1000*60*60*24));
+  const h = Math.floor((diff / (1000*60*60)) % 24);
+  const m = Math.floor((diff / (1000*60)) % 60);
+
+  document.getElementById("time-left").textContent =
+    `⏰ ${d}d ${h}h ${m}m`;
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
 
 loadTeam();
 
