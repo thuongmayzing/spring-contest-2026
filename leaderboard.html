@@ -56,6 +56,11 @@ h2 {
   justify-content: space-between;
   padding: 10px 0;
   border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.item:last-child {
+  border-bottom: none;
 }
 
 .top1 {
@@ -76,20 +81,22 @@ h2 {
 
   <h2>🏆 Leaderboard</h2>
 
+  <!-- LOGIN -->
   <div class="input-box" id="login">
     <input type="text" id="userIdInput" placeholder="Enter your userID">
     <br>
     <button onclick="start()">View Leaderboard</button>
   </div>
 
+  <!-- LIST -->
   <div id="list" style="display:none;">Loading...</div>
 
 </div>
 
 <script>
 
-// 🔥 DÁN LINK MỚI CỦA BẠN
-const apiUrl = "https://script.google.com/macros/s/AKfycbzTSj1U1dX-AR8_OZcNMnbTB1Zdwwx9qhuMkAV8-prVKm26dnHDfdeFaMJ_WOY0RbV3hA/exec";
+// 🔥 API MỚI
+const apiUrl = "https://script.google.com/macros/s/AKfycbzAxLNImv5gHZEDrH5uMo-p7doRlJrmee3dfT-bBP_6K3w8N4zRAF-GyI-OsE17ST1pKA/exec";
 
 let currentUserId = "";
 
@@ -116,7 +123,6 @@ function start(){
 
 // JSONP load
 function loadLeaderboard(){
-
   const url = apiUrl + "?userId=" + encodeURIComponent(currentUserId) + "&callback=handleData";
 
   const script = document.createElement("script");
@@ -150,13 +156,14 @@ function renderLeaderboard(data){
     </div>
   `).join("");
 
+  // 🔥 FIX YOU (ngoài top vẫn hiện thật)
   const isInTop = list.some(u => u.userId === currentUserId);
 
-  if(!isInTop){
+  if(!isInTop && data.currentUser){
     html += `
       <div class="item me">
-        <span>#-- YOU</span>
-        <span>-</span>
+        <span>#${data.currentUser.rank} YOU</span>
+        <span>${data.currentUser.points}</span>
       </div>
     `;
   }
