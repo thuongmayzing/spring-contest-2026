@@ -3,261 +3,192 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spring Contest 2026</title>
-
+<title>Spring Contest 2026 - 7 Levels</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-body {
-  font-family: 'Montserrat', sans-serif;
-  margin: 0;
-  background-color: #f7f8fc;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
+  :root {
+    --primary: #1e2447;
+    --accent: #f4c542;
+    --bg: #f7f8fc;
+  }
+  body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+  .container { max-width: 500px; width: 95%; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 20px 0; }
+  
+  .header { background: var(--primary); color: white; text-align: center; padding: 35px 20px 25px; position: relative; }
+  .header h1 { margin: 0; font-size: 26px; letter-spacing: 1px; }
+  .header p { opacity: 0.8; font-size: 13px; margin: 8px 0; }
+  .level-badge { background: var(--accent); color: var(--primary); padding: 4px 15px; border-radius: 20px; font-weight: 800; font-size: 18px; display: inline-block; margin-top: 10px; }
 
-.container {
-  max-width: 500px;
-  width: 90%;
-  background: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
+  .content { padding: 25px 15px; text-align: center; }
 
-.header {
-  background: #1e2447;
-  color: white;
-  text-align: center;
-  padding: 30px 20px 18px;
-}
+  /* Circle & Reward */
+  .circle { width: 190px; height: 190px; border: 8px solid #eee; border-top-color: var(--accent); border-radius: 50%; margin: 0 auto 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff; transition: transform 0.3s; }
+  .circle:hover { transform: scale(1.03); }
+  .circle .units { font-size: 22px; font-weight: 800; color: var(--primary); margin: 5px 0; }
+  .circle .reward-label { font-size: 11px; text-transform: uppercase; color: #888; letter-spacing: 1px; }
+  .circle .reward-val { font-size: 18px; font-weight: 700; color: #2ecc71; }
 
-.header h1 { margin: 0; font-size: 28px; }
-.header p { margin: 6px 0 10px; font-size: 14px; }
+  /* Progress Bar cải tiến */
+  .progress-wrapper { width: 90%; margin: 20px auto; position: relative; padding-bottom: 25px; }
+  .progress-container { background: #eee; border-radius: 15px; height: 22px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+  .progress-bar { 
+    height: 100%; 
+    background: linear-gradient(90deg, #1e2447, #4a5ab5); 
+    width: 0%; 
+    border-radius: 15px; 
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+  }
+  /* Phần trăm chạy theo đầu thanh */
+  .progress-text { position: absolute; right: 0; top: 25px; font-size: 12px; font-weight: 800; color: var(--primary); }
 
-.header hr {
-  width: 260px;
-  max-width: 70%;
-  border: none;
-  border-top: 1px solid rgba(255,255,255,0.25);
-  margin: 6px auto;
-}
+  /* Stats Grid */
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 25px; }
+  .stat-box { background: #fdfdfd; padding: 10px; border-radius: 10px; border: 1px solid #f0f0f0; }
+  .stat-box small { font-size: 10px; color: #999; text-transform: uppercase; display: block; }
+  .stat-box span { font-size: 14px; font-weight: 700; color: var(--primary); }
 
-.level {
-  font-size: 24px;
-  font-weight: 700;
-}
+  /* Leaderboard */
+  .table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+  .row { display: grid; grid-template-columns: 1.5fr 0.8fr 0.8fr 0.7fr; padding: 12px 10px; align-items: center; background: #fff; border-radius: 8px; font-size: 13px; transition: 0.2s; border: 1px solid #f0f0f0; }
+  .row.header-row { background: none; border: none; font-weight: 700; color: #aaa; font-size: 11px; text-transform: uppercase; padding: 0 10px; }
+  .row.top-rank { border-left: 4px solid var(--accent); background: #fffdf7; }
+  
+  .crown { font-size: 16px; margin-right: 4px; }
+  .contrib { font-size: 11px; color: #888; font-style: italic; }
 
-.content {
-  text-align: center;
-  padding: 25px 20px;
-}
-
-.circle {
-  width: 200px;
-  height: 200px;
-  border: 6px solid #f4c542;
-  border-radius: 50%;
-  margin: 0 auto 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.circle .units { font-size: 24px; font-weight: 700; }
-.circle .reward { font-size: 14px; }
-
-/* STATS */
-.stats {
-  display: flex;
-  justify-content: space-between;
-  width: 90%;
-  margin: 10px auto 12px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.stats div {
-  flex: 1;
-  text-align: center;
-}
-
-/* PROGRESS */
-.progress-container {
-  width: 90%;
-  margin: 0 auto;
-  background: #e0e0e0;
-  border-radius: 20px;
-  height: 26px;
-  overflow: hidden;
-}
-
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, #1e2447, #2f3e70);
-  width: 0%;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center; /* ✅ center text */
-  font-size: 11px;         /* nhỏ */
-  font-weight: 700;        /* bold */
-  letter-spacing: 0.5px;   /* spacing đẹp */
-  border-radius: 20px;
-}
-
-/* TABLE */
-.table {
-  width: 90%;
-  margin: 20px auto;
-  font-size: 13px;
-}
-
-.row {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr;
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.row.header { font-weight: 700; }
-
-.row.top {
-  background: transparent;
-  font-weight: 700;
-  color: #1e2447;
-}
-
+  /* Skeleton */
+  .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%); background-size: 200% 100%; animation: loading 1.5s infinite; border-radius: 4px; }
+  @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 </style>
 </head>
-
 <body>
 
 <div class="container">
-
   <div class="header">
-    <h1>Spring Contest</h1>
-    <p>24 Mar to 24 Jun (23:59 GMT)</p>
-    <hr>
-    <div class="level" id="level">YOU'RE ON LEVEL 0!</div>
+    <h1>SPRING CONTEST</h1>
+    <p>24 Mar - 24 Jun 2026</p>
+    <div id="level-tag" class="level-badge">LEVEL ...</div>
   </div>
 
   <div class="content">
-
-    <div class="circle">
-      <div>Unlock Next Level</div>
-      <div class="units" id="units">...</div>
-      <div class="reward" id="reward">...</div>
+    <div id="target-area">
+      <div class="circle"><div class="skeleton" style="width:60%; height:20px"></div></div>
     </div>
 
-    <div class="stats" id="team-stats"></div>
+    <div class="stats-grid" id="team-stats">
+      <div class="stat-box"><small>Units</small><div class="skeleton" style="height:15px"></div></div>
+      <div class="stat-box"><small>Points</small><div class="skeleton" style="height:15px"></div></div>
+      <div class="stat-box"><small>Days Left</small><div class="skeleton" style="height:15px"></div></div>
+    </div>
 
-    <div class="progress-container">
-      <div class="progress-bar" id="progress-bar">0%</div>
+    <div class="progress-wrapper">
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div id="progress-val" class="progress-text">0%</div>
     </div>
 
     <div class="table">
-      <div class="row header">
-        <div>Email</div>
+      <div class="row header-row">
+        <div>Participant</div>
         <div>Units</div>
         <div>Points</div>
+        <div>%</div>
       </div>
       <div id="table-body"></div>
     </div>
-
   </div>
-
 </div>
 
 <script>
-
 const apiUrl = "https://script.google.com/macros/s/AKfycbwxCKNSF1ouvi0yf0wvVUTpAnvo-NX-sjib3Br1FoV5_zgZOqbE4fvBu5m44oUap8Iziw/exec";
 
-function maskEmail(email){
-  if(!email) return "-";
-  const [n,d] = email.split("@");
-  return n.slice(0,2) + "***@" + d;
+// Cấu hình 7 Levels mới của bạn
+const LEVELS = [
+  { p: 1000, r: "$200" },
+  { p: 2000, r: "$500" },
+  { p: 5000, r: "$1,500" },
+  { p: 10000, r: "$3,500" },
+  { p: 25000, r: "$10,000" },
+  { p: 50000, r: "$25,000" },
+  { p: 150000, r: "$100,000" }
+];
+
+function maskEmail(email) {
+  if(!email || !email.includes("@")) return "User";
+  const [n, d] = email.split("@");
+  return n.slice(0,2) + "**@" + d.split('.')[0];
 }
 
-function loadTeam(){
-  const cb = "cb";
+function loadData() {
+  const cb = "jsonp_callback_" + Math.floor(Math.random() * 100000);
   window[cb] = data => render(data);
-
   const s = document.createElement("script");
-  s.src = apiUrl + "?callback=" + cb + "&t=" + Date.now();
+  s.src = `${apiUrl}?callback=${cb}&_=${Date.now()}`;
   document.body.appendChild(s);
 }
 
-function render(data){
+function render(data) {
+  const users = data.users || [];
+  const totalP = +data.totalPoints || 0;
+  const totalU = +data.totalUnits || 0;
 
-  const users = Array.isArray(data.users) ? data.users : [];
+  // Sắp xếp rank
+  users.sort((a,b) => b.points - a.points);
 
-  const totalPoints = +data.totalPoints || 0;
-  const totalUnits = +data.totalUnits || 0;
+  // Tính Level
+  let currentLvl = 0;
+  LEVELS.forEach((l, idx) => { if(totalP >= l.p) currentLvl = idx + 1; });
+  document.getElementById("level-tag").textContent = `LEVEL ${currentLvl}`;
 
-  const levels = [
-    { points: 1000, reward: "$200" },
-    { points: 2000, reward: "$500" },
-    { points: 5000, reward: "$1,500" }
-  ];
+  // Target Circle
+  const nextLvl = LEVELS.find(l => l.p > totalP) || null;
+  const targetHtml = nextLvl 
+    ? `<div class="circle">
+         <span class="reward-label">Next Reward</span>
+         <span class="units">${nextLvl.p.toLocaleString()} Pts</span>
+         <span class="reward-val">${nextLvl.r}</span>
+       </div>`
+    : `<div class="circle" style="border-color:#2ecc71">
+         <span class="units">MAX LEVEL</span>
+         <span class="reward-val">CONGRATS!</span>
+       </div>`;
+  document.getElementById("target-area").innerHTML = targetHtml;
 
-  let level = 0;
-  for(let i=0;i<levels.length;i++){
-    if(totalPoints >= levels[i].points) level = i+1;
-  }
-
-  document.getElementById("level").textContent =
-    `YOU'RE ON LEVEL ${level}!`;
-
-  const next = levels.find(l => l.points > totalPoints) || levels[levels.length-1];
-
-  document.getElementById("units").textContent = next.points + " Points";
-  document.getElementById("reward").textContent = next.reward;
-
-  // STATS
-  const now = new Date();
-  const end = new Date("2026-06-24T23:59:59Z");
-  const days = Math.max(0, Math.floor((end - now) / (1000*60*60*24)));
-
+  // Stats
+  const days = Math.max(0, Math.floor((new Date("2026-06-24T23:59:59Z") - new Date()) / 864e5));
   document.getElementById("team-stats").innerHTML = `
-    <div>Units: ${totalUnits}</div>
-    <div>Points: ${totalPoints}</div>
-    <div>${days} days</div>
+    <div class="stat-box"><small>Units</small><span>${totalU.toLocaleString()}</span></div>
+    <div class="stat-box"><small>Points</small><span>${totalP.toLocaleString()}</span></div>
+    <div class="stat-box"><small>Days Left</small><span>${days}</span></div>
   `;
 
-  // PROGRESS
-  const prev = level === 0 ? 0 : levels[level-1].points;
-  const progress = ((totalPoints - prev) / (next.points - prev)) * 100;
-  const safe = Math.max(0, Math.min(100, progress));
-
+  // Progress Bar (Chữ chạy theo thanh)
+  const prevP = currentLvl === 0 ? 0 : LEVELS[currentLvl-1].p;
+  const nextP = nextLvl ? nextLvl.p : LEVELS[LEVELS.length-1].p;
+  let pct = nextLvl ? ((totalP - prevP) / (nextP - prevP)) * 100 : 100;
+  pct = Math.min(100, Math.max(0, pct));
+  
   const bar = document.getElementById("progress-bar");
-  bar.style.width = safe + "%";
-  bar.textContent = Math.floor(safe) + "%";
+  const val = document.getElementById("progress-val");
+  bar.style.width = pct + "%";
+  val.textContent = Math.floor(pct) + "%";
+  val.style.right = (100 - pct) + "%"; // Đẩy text chạy theo đầu thanh
 
-  // TOP USER
-  let top = null;
-  if(users.length){
-    top = users.reduce((a,b)=> a.points > b.points ? a : b);
-  }
-
-  // TABLE
-  const html = users.map(u => `
-    <div class="row ${top && u.userId === top.userId ? 'top' : ''}">
-      <div>${maskEmail(u.email)}</div>
+  // Table
+  document.getElementById("table-body").innerHTML = users.map((u, i) => `
+    <div class="row ${i === 0 ? 'top-rank' : ''}">
+      <div style="text-align:left">${i===0?'<span class="crown">👑</span>':''} ${maskEmail(u.email)}</div>
       <div>${u.units || 0}</div>
-      <div>${u.points || 0}</div>
+      <div style="font-weight:600">${u.points || 0}</div>
+      <div class="contrib">${totalP > 0 ? ((u.points/totalP)*100).toFixed(1) : 0}%</div>
     </div>
   `).join("");
-
-  document.getElementById("table-body").innerHTML = html;
 }
 
-loadTeam();
-
+loadData();
 </script>
-
 </body>
 </html>
