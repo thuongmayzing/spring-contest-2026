@@ -13,64 +13,84 @@
     --bg: #f7f8fc;
     --text-muted: #999;
   }
-  body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--bg); display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 20px 0; }
   
-  .container { max-width: 480px; width: 92%; background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.08); margin-top: 20px; }
+  /* Căn giữa toàn bộ nội dung trong body */
+  body { 
+    font-family: 'Montserrat', sans-serif; 
+    margin: 0; 
+    background: var(--bg); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; /* Căn giữa dọc */
+    min-height: 100vh; 
+  }
+  
+  .container { 
+    max-width: 480px; 
+    width: 92%; 
+    background: white; 
+    border-radius: 24px; 
+    overflow: hidden; 
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08); 
+  }
 
-  /* LOGIN BOX */
-  .login-box { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 60px 20px; gap: 15px; text-align: center; }
-  .login-box h2 { color: var(--primary); margin: 0 0 10px; font-weight: 800; font-size: 24px; }
-  .login-box input { padding: 14px; border-radius: 12px; border: 1px solid #ddd; width: 80%; font-family: inherit; font-size: 15px; outline: none; }
-  .login-box button { background: var(--primary); color: white; border: none; border-radius: 12px; padding: 14px 30px; font-weight: 700; cursor: pointer; width: 85%; font-size: 16px; transition: 0.2s; }
-  .login-box button:hover { opacity: 0.9; }
+  /* LOGIN BOX: Căn giữa giống index chính */
+  .login-box { 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 80px 20px; 
+    gap: 15px; 
+    text-align: center; 
+  }
+  .login-box h2 { color: var(--primary); margin: 0 0 10px; font-weight: 800; font-size: 26px; text-transform: uppercase; letter-spacing: 1px; }
+  .login-box input { padding: 15px; border-radius: 12px; border: 1px solid #ddd; width: 85%; font-family: inherit; font-size: 15px; outline: none; }
+  .login-box button { background: var(--primary); color: white; border: none; border-radius: 12px; padding: 15px 30px; font-weight: 700; cursor: pointer; width: 92%; font-size: 16px; transition: 0.3s; }
+  .login-box button:hover { background: #2a3363; transform: translateY(-2px); }
 
-  /* HEADER: All Caps, Montserrat bold */
-  .header { background: var(--primary); color: white; text-align: center; padding: 40px 20px 30px; }
-  .header h1 { margin: 0; font-size: 28px; letter-spacing: 2px; font-weight: 800; text-transform: uppercase; color: #fff; }
+  /* HEADER: Spring Contest phía trên, LEADERBOARD phía dưới */
+  .header { background: var(--primary); color: white; text-align: center; padding: 45px 20px 35px; }
+  .header .contest-name { font-size: 14px; font-weight: 600; opacity: 0.8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+  .header h1 { margin: 0; font-size: 32px; letter-spacing: 3px; font-weight: 800; text-transform: uppercase; color: #fff; }
 
-  .content { padding: 30px 15px; }
+  .content { padding: 30px 12px; }
 
-  /* LEADERBOARD LIST - Grid 4 cột mới (Rank, Name, LV, Points) */
-  .table-header { display: grid; grid-template-columns: 50px 1.2fr 45px 75px; padding: 0 15px 10px; font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  /* TABLE UI: 4 cột thoáng đãng */
+  .table-header { 
+    display: grid; 
+    grid-template-columns: 45px 1.2fr 60px 80px; 
+    padding: 0 15px 12px; 
+    font-size: 10px; 
+    font-weight: 800; 
+    color: var(--text-muted); 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+  }
   
   .list-container { display: flex; flex-direction: column; gap: 10px; }
   
   .row { 
     display: grid; 
-    grid-template-columns: 50px 1.2fr 45px 75px; 
-    padding: 16px 15px; 
+    grid-template-columns: 45px 1.2fr 60px 80px; 
+    padding: 18px 15px; 
     align-items: center; 
     background: #fff; 
-    border-radius: 14px; 
+    border-radius: 16px; 
     font-size: 13px; 
     border: 1px solid #f2f2f2; 
     color: #444;
-    transition: 0.2s;
   }
 
-  /* TOP 1 & ME HIGHLIGHT */
-  .row.top1 { 
-    background: #fffdf2; 
-    border-color: var(--accent); 
-    font-weight: 700; 
-    color: var(--primary);
-    box-shadow: 0 4px 15px rgba(244, 197, 66, 0.15);
-  }
-  
-  .row.me { 
-    background: #eff2ff; 
-    border-color: #3d4da0; 
-    border-style: dashed; /* Thêm dashed để phân biệt rõ */
-    font-weight: 800; 
-    color: var(--primary);
-  }
+  .row.top1 { background: #fffdf2; border-color: var(--accent); font-weight: 700; box-shadow: 0 4px 15px rgba(244, 197, 66, 0.12); }
+  .row.me { background: #eff2ff; border-color: #3d4da0; border-style: dashed; font-weight: 800; }
 
-  .rank-col { font-weight: 800; font-size: 14px; text-align: center; }
-  .name-col { font-weight: 600; text-align: left; }
-  .level-col { text-align: center; font-weight: 700; color: var(--accent); font-size: 12px; } /* Cột LV nổi bật màu vàng */
-  .points-col { font-weight: 700; text-align: right; color: var(--primary); font-family: inherit; font-size: 14px; } /* Phông Montserrat chuẩn */
+  .rank-col { font-weight: 800; text-align: center; }
+  .name-col { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .level-col { text-align: center; font-weight: 700; color: #2ecc71; font-size: 12px; }
+  .points-col { font-weight: 700; text-align: right; color: var(--primary); font-size: 14px; }
 
-  #list-wrapper { display: none; }
+  #list-wrapper { display: none; width: 100%; }
   .loading { text-align: center; padding: 40px; color: var(--text-muted); font-weight: 600; }
 </style>
 </head>
@@ -78,13 +98,15 @@
 
 <div class="container">
   <div class="login-box" id="login">
-    <h2>🏆 Leaderboard</h2>
+    <span style="font-size: 40px; margin-bottom: 10px;">🏆</span>
+    <h2>Leaderboard</h2>
     <input type="text" id="userIdInput" placeholder="Enter your userID">
     <button onclick="start()">View Rankings</button>
   </div>
 
   <div id="list-wrapper">
     <div class="header">
+      <span class="contest-name">Spring Contest</span>
       <h1>LEADERBOARD</h1>
     </div>
 
@@ -92,7 +114,8 @@
       <div class="table-header">
         <div>Rank</div>
         <div>Participant</div>
-        <div style="text-align:center">LV</div> <div style="text-align:right">Points</div>
+        <div style="text-align:center">Level</div>
+        <div style="text-align:right">Points</div>
       </div>
       
       <div class="list-container" id="list">
@@ -103,23 +126,19 @@
 </div>
 
 <script>
-// Giữ nguyên API và Logic của bạn
 const apiUrl = "https://script.google.com/macros/s/AKfycbzAxLNImv5gHZEDrH5uMo-p7doRlJrmee3dfT-bBP_6K3w8N4zRAF-GyI-OsE17ST1pKA/exec";
 let currentUserId = "";
 
-// Cấu hình Levels của bạn
 const LEVELS = [
   { points: 1000 }, { points: 2000 }, { points: 5000 }, { points: 10000 }, { points: 25000 }, { points: 50000 }, { points: 150000 }
 ];
 
-// Hàm mask email
 function maskEmail(email){
   if(!email) return "";
   const [n,d] = email.split("@");
   return n.slice(0,2) + "***@" + d;
 }
 
-// Hàm tính Level từ Points
 function getLevel(points) {
   let level = 0;
   for (let i = 0; i < LEVELS.length; i++) {
@@ -128,7 +147,6 @@ function getLevel(points) {
   return level;
 }
 
-// Hàm start
 function start(){
   const userId = document.getElementById("userIdInput").value.trim();
   if(!userId) return alert("Enter userID");
@@ -136,11 +154,9 @@ function start(){
   currentUserId = userId;
   document.getElementById("login").style.display = "none";
   document.getElementById("list-wrapper").style.display = "block";
-
   loadLeaderboard();
 }
 
-// Hàm JSONP load
 function loadLeaderboard(){
   const url = apiUrl + "?userId=" + encodeURIComponent(currentUserId) + "&callback=handleData";
   const script = document.createElement("script");
@@ -148,7 +164,6 @@ function loadLeaderboard(){
   document.body.appendChild(script);
 }
 
-// Callback xử lý dữ liệu
 window.handleData = function(data){
   if(data.error){
     document.getElementById("list").innerHTML = `<div style="color:red; text-align:center;">${data.error}</div>`;
@@ -157,41 +172,34 @@ window.handleData = function(data){
   renderLeaderboard(data);
 }
 
-// Hàm render dữ liệu với cột Level mới
 function renderLeaderboard(data){
   const leaderboard = data.leaderboard || [];
   
-  // Render danh sách chính (Top 5+...)
   let html = leaderboard.map(u => {
     const isMe = u.userId === currentUserId;
-    const isTop1 = u.rank === 1;
-    const level = getLevel(u.points); // Tính Level cho từng user
-    
     return `
-      <div class="row ${isMe ? 'me' : ''} ${isTop1 ? 'top1' : ''}">
-        <div class="rank-col">${isTop1 ? '👑' : '#' + u.rank}</div>
+      <div class="row ${isMe ? 'me' : ''} ${u.rank === 1 ? 'top1' : ''}">
+        <div class="rank-col">${u.rank === 1 ? '👑' : '#' + u.rank}</div>
         <div class="name-col">${isMe ? "YOU" : maskEmail(u.email)}</div>
-        <div class="level-col">${level}</div> <div class="points-col">${u.points.toLocaleString()}</div> </div>
+        <div class="level-col">${getLevel(u.points)}</div>
+        <div class="points-col">${u.points.toLocaleString()}</div>
+      </div>
     `;
   }).join("");
 
-  // FIX YOU (Nếu không nằm trong top vẫn hiện dòng cuối)
-  const isInTop = leaderboard.some(u => u.userId === currentUserId);
-  if(!isInTop && data.currentUser){
-    const myLevel = getLevel(data.currentUser.points); // Tính Level của "YOU" ngoài top
+  if(!leaderboard.some(u => u.userId === currentUserId) && data.currentUser){
     html += `
       <div style="text-align:center; color:#ccc; margin: 10px 0; font-size:12px;">•••</div>
       <div class="row me">
         <div class="rank-col">#${data.currentUser.rank}</div>
         <div class="name-col">YOU</div>
-        <div class="level-col">${myLevel}</div> <div class="points-col">${data.currentUser.points.toLocaleString()}</div>
+        <div class="level-col">${getLevel(data.currentUser.points)}</div>
+        <div class="points-col">${data.currentUser.points.toLocaleString()}</div>
       </div>
     `;
   }
-
   document.getElementById("list").innerHTML = html;
 }
 </script>
-
 </body>
 </html>
