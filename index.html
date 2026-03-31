@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spring Contest 2026 - Individual Progress</title>
+<title>Individual Progress - Optimized Spacing</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
@@ -14,36 +14,35 @@
   }
   body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
   
-  .container { max-width: 480px; width: 92%; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 35px rgba(0,0,0,0.08); margin: 15px 0; }
+  /* CONTAINER: Nới rộng Spacing (margin) một chút để thoáng hơn */
+  .container { max-width: 480px; width: 92%; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 35px rgba(0,0,0,0.08); margin: 20px 0; }
   
-  /* LOGIN BOX: Căn chỉnh lại cho đẹp */
   .email-box { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 60px 20px; gap: 15px; }
   .email-box input { padding: 14px; border-radius: 12px; border: 1px solid #ddd; width: 80%; font-family: inherit; font-size: 15px; outline: none; }
-  .email-box input:focus { border-color: var(--primary); }
-  .email-box button { background: var(--primary); color: white; border: none; border-radius: 12px; padding: 14px 30px; font-weight: 700; cursor: pointer; transition: 0.2s; width: 85%; }
-  .email-box button:hover { opacity: 0.9; }
+  .email-box button { background: var(--primary); color: white; border: none; border-radius: 12px; padding: 14px 30px; font-weight: 700; cursor: pointer; width: 85%; }
 
-  /* HEADER: Đồng bộ với Team Dashboard */
-  .header { background: var(--primary); color: white; text-align: center; padding: 30px 20px 20px; }
+  /* HEADER: Tăng nhẹ padding để thoáng */
+  .header { background: var(--primary); color: white; text-align: center; padding: 35px 20px 22px; }
   .header h1 { margin: 0; font-size: 28px; letter-spacing: 0.5px; font-weight: 700; text-transform: uppercase; }
   .header p { opacity: 0.8; font-size: 14px; margin: 8px 0; color: #eee; }
   .level-badge { background: var(--accent); color: var(--primary); padding: 5px 22px; border-radius: 20px; font-weight: 800; font-size: 17px; display: inline-block; margin-top: 10px; }
 
-  .content { padding: 25px 15px 20px; text-align: center; }
+  /* CONTENT: Tăng padding tổng thể */
+  .content { padding: 30px 15px 25px; text-align: center; }
 
-  /* CIRCLE: Vàng nguyên khối, text chuẩn size */
-  .circle { width: 180px; height: 180px; border: 7px solid var(--accent); border-radius: 50%; margin: 0 auto 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff; line-height: 1.2; }
+  /* CIRCLE: Tăng kích thước nhẹ lên 185px để fit screen hơn */
+  .circle { width: 185px; height: 185px; border: 8px solid var(--accent); border-radius: 50%; margin: 0 auto 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff; line-height: 1.2; }
   .circle .label { font-size: 11px; text-transform: uppercase; color: #999; letter-spacing: 1px; font-weight: 600; }
-  .circle .units { font-size: 22px; font-weight: 800; color: var(--primary); margin: 4px 0; }
-  .circle .reward { font-size: 18px; font-weight: 700; color: #2ecc71; }
+  .circle .units { font-size: 24px; font-weight: 800; color: var(--primary); margin: 4px 0; }
+  .circle .reward { font-size: 19px; font-weight: 700; color: #2ecc71; }
 
-  /* STATS GRID: Chữ xám in hoa giống Team Dashboard */
-  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 25px; }
+  /* STATS GRID: Tăng nhẹ gap và margin */
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 30px; }
   .stat-box { background: #fff; padding: 12px 5px; border-radius: 12px; border: 1px solid #eee; }
   .stat-box small { font-size: 11px; color: #999; text-transform: uppercase; display: block; font-weight: 700; margin-bottom: 4px; }
-  .stat-box span { font-size: 16px; font-weight: 800; color: var(--primary); }
+  .stat-box span { font-size: 17px; font-weight: 800; color: var(--primary); }
 
-  /* PROGRESS BAR: % nằm trong và bám đầu thanh */
+  /* PROGRESS BAR: Giữ nguyên size, tăng nhẹ spacing tổng thể */
   .progress-wrapper { width: 95%; margin: 0 auto 10px; position: relative; }
   .progress-container { background: #eee; border-radius: 20px; height: 26px; overflow: hidden; }
   .progress-bar { 
@@ -57,8 +56,8 @@
   }
   .progress-bar-text { color: white; font-size: 12px; font-weight: 800; padding-right: 10px; }
 
-  /* FOOTER INFO: Cân bằng khoảng cách */
-  .footer-info { display: flex; justify-content: space-between; width: 95%; margin: 15px auto 5px; font-size: 12px; color: #888; font-weight: 600; }
+  /* Footer Info: Chữ đậm và chuyên nghiệp */
+  .footer-info { display: flex; justify-content: space-between; width: 95%; margin: 15px auto 5px; font-size: 12px; color: #777; font-weight: 700; text-transform: uppercase; }
   .footer { text-align: center; font-size: 12px; padding: 15px; color: #bbb; border-top: 1px solid #f2f2f2; }
 
   #widget { display: none; }
@@ -67,7 +66,6 @@
 
 <body>
 <div class="container">
-
   <div class="email-box" id="email-box">
     <h2 style="color: var(--primary); margin-bottom: 10px;">Enter ID</h2>
     <input type="text" placeholder="Your User ID" id="userIdInput">
@@ -84,11 +82,11 @@
     <div class="content">
       <div class="circle">
         <span class="label">Next Reward</span>
-        <div class="units" id="next-goal">Loading...</div>
+        <div class="units" id="next-goal">... Points</div>
         <div class="reward" id="next-reward">...</div>
       </div>
 
-      <div class="stats-grid" id="stats-area">
+      <div class="stats-grid">
         <div class="stat-box"><small>Units</small><span id="stat-units">0</span></div>
         <div class="stat-box"><small>Points</small><span id="stat-points">0</span></div>
         <div class="stat-box"><small>Rank</small><span id="stat-rank">0</span></div>
@@ -103,7 +101,7 @@
       </div>
 
       <div class="footer-info">
-        <div id="progress-text">0 / 1000</div>
+        <div id="progress-text">0 / 0 points</div>
         <div id="time-left">⏰ Loading...</div>
       </div>
     </div>
@@ -120,24 +118,15 @@ const apiUrl = "https://script.google.com/macros/s/AKfycbw-W_GTkq-BmpNDv8ZfN4psO
 async function loadWidget() {
   const userId = document.getElementById("userIdInput").value.trim();
   if (!userId) return alert("Enter userID");
-
   document.getElementById("email-box").style.display = "none";
   document.getElementById("widget").style.display = "block";
-
   const cacheKey = "user_" + userId;
   const cached = localStorage.getItem(cacheKey);
   if (cached) renderData(JSON.parse(cached));
-
   try {
     const res = await fetch(apiUrl + "?id=" + encodeURIComponent(userId));
     const data = await res.json();
-
-    if (data.error) {
-      alert("User not found");
-      location.reload();
-      return;
-    }
-
+    if (data.error) { alert("User not found"); location.reload(); return; }
     localStorage.setItem(cacheKey, JSON.stringify(data));
     renderData(data);
   } catch (err) { console.error(err); }
@@ -163,21 +152,21 @@ function renderData(data) {
   const nextL = levels.find(l => l.points > points) || levels[levels.length-1];
   document.getElementById("next-goal").textContent = nextL.points.toLocaleString() + " Points";
   document.getElementById("next-reward").textContent = nextL.reward;
-
   document.getElementById("stat-units").textContent = units.toLocaleString();
   document.getElementById("stat-points").textContent = points.toLocaleString();
   document.getElementById("stat-rank").textContent = "#" + rank;
 
   const prev = currentLevel === 0 ? 0 : levels[currentLevel - 1].points;
   const pct = Math.max(0, Math.min(100, ((points - prev) / (nextL.points - prev)) * 100));
-
   const bar = document.getElementById("progress-bar");
   const pctText = document.getElementById("progress-pct");
   bar.style.width = pct + "%";
   pctText.textContent = Math.floor(pct) + "%";
   pctText.style.display = pct > 10 ? "block" : "none";
 
-  document.getElementById("progress-text").textContent = `${points.toLocaleString()} / ${nextL.points.toLocaleString()}`;
+  // Cập nhật text kèm chữ "points"
+  document.getElementById("progress-text").textContent = 
+    `${points.toLocaleString()} / ${nextL.points.toLocaleString()} points`;
 }
 
 function updateTimer() {
@@ -190,7 +179,6 @@ function updateTimer() {
   const m = Math.floor((diff / (1000*60)) % 60);
   document.getElementById("time-left").textContent = `⏰ ${d}d ${h}h ${m}m`;
 }
-
 setInterval(updateTimer, 1000);
 updateTimer();
 </script>
