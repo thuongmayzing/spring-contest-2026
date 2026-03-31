@@ -70,7 +70,7 @@ body {
 .circle .units { font-size: 24px; font-weight: 700; }
 .circle .reward { font-size: 14px; }
 
-/* ✅ STATS */
+/* STATS */
 .stats {
   display: flex;
   justify-content: space-between;
@@ -85,6 +85,7 @@ body {
   text-align: center;
 }
 
+/* PROGRESS */
 .progress-container {
   width: 90%;
   margin: 0 auto;
@@ -101,8 +102,11 @@ body {
   color: #fff;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  padding-right: 10px;
+  justify-content: center; /* ✅ center text */
+  font-size: 11px;         /* nhỏ */
+  font-weight: 700;        /* bold */
+  letter-spacing: 0.5px;   /* spacing đẹp */
+  border-radius: 20px;
 }
 
 /* TABLE */
@@ -122,8 +126,9 @@ body {
 .row.header { font-weight: 700; }
 
 .row.top {
-  background: #fff7d6;
-  font-weight: 600;
+  background: transparent;
+  font-weight: 700;
+  color: #1e2447;
 }
 
 </style>
@@ -148,16 +153,12 @@ body {
       <div class="reward" id="reward">...</div>
     </div>
 
-    <!-- ✅ TEAM STATS -->
     <div class="stats" id="team-stats"></div>
 
     <div class="progress-container">
       <div class="progress-bar" id="progress-bar">0%</div>
     </div>
 
-    <div id="progress-text" style="margin-top:6px; font-size:13px; color:gray;"></div>
-
-    <!-- TABLE -->
     <div class="table">
       <div class="row header">
         <div>Email</div>
@@ -173,7 +174,7 @@ body {
 
 <script>
 
-const apiUrl = "https://script.google.com/macros/s/AKfycbwxCKNSF1ouvi0yf0wvVUTpAnvo-NX-sjib3Br1FoV5_zgZOqbE4fvBu5m44oUap8Iziw/exec";
+const apiUrl = "https://script.google.com/macros/s/AKfycbw-W_GTkq-BmpNDv8ZfN4psO_e4Rq4f5obqFFi7HwKJLVCYSjNqP3O0Ft6Y6wSK06zXkQ/exec";
 
 function maskEmail(email){
   if(!email) return "-";
@@ -197,7 +198,6 @@ function render(data){
   const totalPoints = +data.totalPoints || 0;
   const totalUnits = +data.totalUnits || 0;
 
-  // LEVEL
   const levels = [
     { points: 1000, reward: "$200" },
     { points: 2000, reward: "$500" },
@@ -217,7 +217,7 @@ function render(data){
   document.getElementById("units").textContent = next.points + " Points";
   document.getElementById("reward").textContent = next.reward;
 
-  // ✅ TEAM STATS (3 cột)
+  // STATS
   const now = new Date();
   const end = new Date("2026-06-24T23:59:59Z");
   const days = Math.max(0, Math.floor((end - now) / (1000*60*60*24)));
@@ -228,7 +228,7 @@ function render(data){
     <div>${days} days</div>
   `;
 
-  // progress
+  // PROGRESS
   const prev = level === 0 ? 0 : levels[level-1].points;
   const progress = ((totalPoints - prev) / (next.points - prev)) * 100;
   const safe = Math.max(0, Math.min(100, progress));
@@ -236,9 +236,6 @@ function render(data){
   const bar = document.getElementById("progress-bar");
   bar.style.width = safe + "%";
   bar.textContent = Math.floor(safe) + "%";
-
-  document.getElementById("progress-text").textContent =
-    `${totalPoints} / ${next.points} points`;
 
   // TOP USER
   let top = null;
