@@ -1,186 +1,163 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Individual Progress - Optimized Spacing</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+const SPREADSHEET_ID = "1CCBFzlcoSagHSZrDxUY5TrOv7vK5bWrrI6Smd2mGZ3M";
+const FOLDER_ID = "1b5_kFPUmC_hs9eO8VBw2A8Ls5xOtidIC";
+const SHEET_NAME = "Result";
 
-<style>
-  :root {
-    --primary: #1e2447;
-    --accent: #f4c542;
-    --bg: #f7f8fc;
+/**
+ * 🔥 FIX: luôn lấy file CSV mới nhất (không phụ thuộc timestamp lỗi)
+ */
+function updateSheetFromCSV() {
+
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) throw new Error("Sheet not found");
+
+  const folder = DriveApp.getFolderById(FOLDER_ID);
+  const files = folder.getFilesByType(MimeType.CSV);
+
+  const fileList = [];
+
+  while (files.hasNext()) {
+    const file = files.next();
+    fileList.push(file);
   }
-  body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-  
-  /* CONTAINER: Nới rộng Spacing (margin) một chút để thoáng hơn */
-  .container { max-width: 480px; width: 92%; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 35px rgba(0,0,0,0.08); margin: 20px 0; }
-  
-  .email-box { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 60px 20px; gap: 15px; }
-  .email-box input { padding: 14px; border-radius: 12px; border: 1px solid #ddd; width: 80%; font-family: inherit; font-size: 15px; outline: none; }
-  .email-box button { background: var(--primary); color: white; border: none; border-radius: 12px; padding: 14px 30px; font-weight: 700; cursor: pointer; width: 85%; }
 
-  /* HEADER: Tăng nhẹ padding để thoáng */
-  .header { background: var(--primary); color: white; text-align: center; padding: 35px 20px 22px; }
-  .header h1 { margin: 0; font-size: 28px; letter-spacing: 0.5px; font-weight: 700; text-transform: uppercase; }
-  .header p { opacity: 0.8; font-size: 14px; margin: 8px 0; color: #eee; }
-  .level-badge { background: var(--accent); color: var(--primary); padding: 5px 22px; border-radius: 20px; font-weight: 800; font-size: 17px; display: inline-block; margin-top: 10px; }
-
-  /* CONTENT: Tăng padding tổng thể */
-  .content { padding: 30px 15px 25px; text-align: center; }
-
-  /* CIRCLE: Tăng kích thước nhẹ lên 185px để fit screen hơn */
-  .circle { width: 185px; height: 185px; border: 8px solid var(--accent); border-radius: 50%; margin: 0 auto 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff; line-height: 1.2; }
-  .circle .label { font-size: 11px; text-transform: uppercase; color: #999; letter-spacing: 1px; font-weight: 600; }
-  .circle .units { font-size: 24px; font-weight: 800; color: var(--primary); margin: 4px 0; }
-  .circle .reward { font-size: 19px; font-weight: 700; color: #2ecc71; }
-
-  /* STATS GRID: Tăng nhẹ gap và margin */
-  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 30px; }
-  .stat-box { background: #fff; padding: 12px 5px; border-radius: 12px; border: 1px solid #eee; }
-  .stat-box small { font-size: 11px; color: #999; text-transform: uppercase; display: block; font-weight: 700; margin-bottom: 4px; }
-  .stat-box span { font-size: 17px; font-weight: 800; color: var(--primary); }
-
-  /* PROGRESS BAR: Giữ nguyên size, tăng nhẹ spacing tổng thể */
-  .progress-wrapper { width: 95%; margin: 0 auto 10px; position: relative; }
-  .progress-container { background: #eee; border-radius: 20px; height: 26px; overflow: hidden; }
-  .progress-bar { 
-    height: 100%; 
-    background: linear-gradient(90deg, #1e2447, #3d4da0); 
-    width: 0%; 
-    transition: width 0.8s ease;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+  if (fileList.length === 0) {
+    Logger.log("❌ No CSV files found");
+    return;
   }
-  .progress-bar-text { color: white; font-size: 12px; font-weight: 800; padding-right: 10px; }
 
-  /* Footer Info: Chữ đậm và chuyên nghiệp */
-  .footer-info { display: flex; justify-content: space-between; width: 95%; margin: 15px auto 5px; font-size: 12px; color: #777; font-weight: 700; text-transform: uppercase; }
-  .footer { text-align: center; font-size: 12px; padding: 15px; color: #bbb; border-top: 1px solid #f2f2f2; }
+  // 🔥 FIX: sort theo thời gian tạo (ổn định hơn lastUpdated)
+  fileList.sort((a, b) => b.getDateCreated() - a.getDateCreated());
 
-  #widget { display: none; }
-</style>
-</head>
+  const latestFile = fileList[0];
 
-<body>
-<div class="container">
-  <div class="email-box" id="email-box">
-    <h2 style="color: var(--primary); margin-bottom: 10px;">Enter ID</h2>
-    <input type="text" placeholder="Your User ID" id="userIdInput">
-    <button onclick="loadWidget()">View My Progress</button>
-  </div>
+  Logger.log("✅ Using file: " + latestFile.getName());
 
-  <div id="widget">
-    <div class="header">
-      <h1>Spring Contest</h1>
-      <p>24 Mar to 24 Jun (23:59 GMT)</p>
-      <div class="level-badge" id="level-text">LEVEL 0</div>
-    </div>
+  let csvData = latestFile.getBlob().getDataAsString("UTF-8");
 
-    <div class="content">
-      <div class="circle">
-        <span class="label">Next Reward</span>
-        <div class="units" id="next-goal">... Points</div>
-        <div class="reward" id="next-reward">...</div>
-      </div>
+  csvData = csvData
+    .replace(/^\uFEFF/, '')
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .trim();
 
-      <div class="stats-grid">
-        <div class="stat-box"><small>Units</small><span id="stat-units">0</span></div>
-        <div class="stat-box"><small>Points</small><span id="stat-points">0</span></div>
-        <div class="stat-box"><small>Rank</small><span id="stat-rank">0</span></div>
-      </div>
+  const lines = csvData.split('\n').filter(l => l.trim() !== "");
 
-      <div class="progress-wrapper">
-        <div class="progress-container">
-          <div class="progress-bar" id="progress-bar">
-            <span class="progress-bar-text" id="progress-pct">0%</span>
-          </div>
-        </div>
-      </div>
+  const parsed = [];
 
-      <div class="footer-info">
-        <div id="progress-text">0 / 0 points</div>
-        <div id="time-left">⏰ Loading...</div>
-      </div>
-    </div>
+  for (let line of lines) {
+    try {
+      let row = Utilities.parseCsv(line, ",")[0];
 
-    <div class="footer">
-      Email: <span id="user-email"></span>
-    </div>
-  </div>
-</div>
+      if (row.length > 0 && row[row.length - 1] === "") {
+        row.pop();
+      }
 
-<script>
-const apiUrl = "https://script.google.com/macros/s/AKfycbw-W_GTkq-BmpNDv8ZfN4psO_e4Rq4f5obqFFi7HwKJLVCYSjNqP3O0Ft6Y6wSK06zXkQ/exec";
+      parsed.push(row);
 
-async function loadWidget() {
-  const userId = document.getElementById("userIdInput").value.trim();
-  if (!userId) return alert("Enter userID");
-  document.getElementById("email-box").style.display = "none";
-  document.getElementById("widget").style.display = "block";
-  const cacheKey = "user_" + userId;
-  const cached = localStorage.getItem(cacheKey);
-  if (cached) renderData(JSON.parse(cached));
-  try {
-    const res = await fetch(apiUrl + "?id=" + encodeURIComponent(userId));
-    const data = await res.json();
-    if (data.error) { alert("User not found"); location.reload(); return; }
-    localStorage.setItem(cacheKey, JSON.stringify(data));
-    renderData(data);
-  } catch (err) { console.error(err); }
+    } catch (err) {
+      Logger.log("❌ Parse error line: " + line);
+    }
+  }
+
+  if (parsed.length === 0) {
+    Logger.log("❌ No parsed data");
+    return;
+  }
+
+  const headers = parsed.shift();
+  const rows = parsed;
+
+  Logger.log("📊 Rows: " + rows.length);
+
+  sheet.clear();
+
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+
+  if (rows.length > 0) {
+    sheet.getRange(2, 1, rows.length, headers.length).setValues(rows);
+  }
+
+  Logger.log("✅ Sheet updated successfully");
 }
 
-function renderData(data) {
-  const units = +data.units || 0;
-  const points = +data.points || 0;
-  const rank = +data.rank || 0;
-  document.getElementById("user-email").textContent = data.email || "";
 
-  const levels = [
-    { points: 1000, reward: "$200" }, { points: 2000, reward: "$500" },
-    { points: 5000, reward: "$1,500" }, { points: 10000, reward: "$3,500" },
-    { points: 25000, reward: "$10,000" }, { points: 50000, reward: "$25,000" },
-    { points: 150000, reward: "$100,000" }
-  ];
+/**
+ * 🔥 API (kèm auto update)
+ */
+function doGet(e) {
 
-  let currentLevel = 0;
-  levels.forEach((l, i) => { if (points >= l.points) currentLevel = i + 1; });
-  document.getElementById("level-text").textContent = `LEVEL ${currentLevel}`;
+  // 🔥 luôn update trước khi trả data
+  updateSheetFromCSV();
 
-  const nextL = levels.find(l => l.points > points) || levels[levels.length-1];
-  document.getElementById("next-goal").textContent = nextL.points.toLocaleString() + " Points";
-  document.getElementById("next-reward").textContent = nextL.reward;
-  document.getElementById("stat-units").textContent = units.toLocaleString();
-  document.getElementById("stat-points").textContent = points.toLocaleString();
-  document.getElementById("stat-rank").textContent = "#" + rank;
+  const sheet = SpreadsheetApp
+    .openById(SPREADSHEET_ID)
+    .getSheetByName(SHEET_NAME);
 
-  const prev = currentLevel === 0 ? 0 : levels[currentLevel - 1].points;
-  const pct = Math.max(0, Math.min(100, ((points - prev) / (nextL.points - prev)) * 100));
-  const bar = document.getElementById("progress-bar");
-  const pctText = document.getElementById("progress-pct");
-  bar.style.width = pct + "%";
-  pctText.textContent = Math.floor(pct) + "%";
-  pctText.style.display = pct > 10 ? "block" : "none";
+  if (!sheet) return json({ error: "Sheet not found" });
 
-  // Cập nhật text kèm chữ "points"
-  document.getElementById("progress-text").textContent = 
-    `${points.toLocaleString()} / ${nextL.points.toLocaleString()} points`;
+  const data = sheet.getDataRange().getValues();
+  if (data.length < 2) return json({ error: "No data" });
+
+  const headers = data[0].map(h =>
+    h.toString().toLowerCase().replace(/\s+/g, ' ').trim()
+  );
+
+  const findIndex = (keyword) =>
+    headers.findIndex(h => h.includes(keyword));
+
+  const userIdIndex = findIndex("user id");
+  const emailIndex = findIndex("email");
+  const unitsIndex = findIndex("units");
+  const pointsIndex = findIndex("points");
+
+  if (userIdIndex === -1) return json({ error: "Missing User ID column" });
+  if (emailIndex === -1) return json({ error: "Missing Email column" });
+  if (pointsIndex === -1) return json({ error: "Missing Points column" });
+
+  const userId = (e.parameter.id || "").trim().toLowerCase();
+  if (!userId) return json({ error: "Missing id" });
+
+  let users = [];
+  let currentUser = null;
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+
+    const u = {
+      userId: String(row[userIdIndex] || "").trim(),
+      email: String(row[emailIndex] || "").trim(),
+      units: Number(row[unitsIndex] || 0),
+      points: Number(row[pointsIndex] || 0)
+    };
+
+    users.push(u);
+
+    if (u.userId.toLowerCase() === userId) {
+      currentUser = u;
+    }
+  }
+
+  if (!currentUser) return json({ error: "User not found" });
+
+  users.sort((a, b) => b.points - a.points);
+  const rank = users.findIndex(u => u.userId === currentUser.userId) + 1;
+
+  return json({
+    userId: currentUser.userId,
+    email: currentUser.email,
+    units: currentUser.units,
+    points: currentUser.points,
+    rank: rank
+  });
 }
 
-function updateTimer() {
-  const end = new Date("2026-06-24T23:59:59Z");
-  const now = new Date();
-  const diff = end - now;
-  if (diff <= 0) return document.getElementById("time-left").textContent = "Ended";
-  const d = Math.floor(diff / (1000*60*60*24));
-  const h = Math.floor((diff / (1000*60*60)) % 24);
-  const m = Math.floor((diff / (1000*60)) % 60);
-  document.getElementById("time-left").textContent = `⏰ ${d}d ${h}h ${m}m`;
+
+/**
+ * helper JSON
+ */
+function json(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
 }
-setInterval(updateTimer, 1000);
-updateTimer();
-</script>
-</body>
-</html>
